@@ -21,7 +21,11 @@ struct GameObject
 struct GameObject CreateGameObject(struct Buffer* buffer, struct Shader* shader, struct Sprite* sprite);
 #else
 struct GameObject CreateGameObject(struct Buffer* buffer, struct Shader* shader);
+#if 1
+struct GameObject CreateVoxelGameObject(struct Shader* shader, enum BLOCK_TEX_NAMES texName);
+#else
 struct GameObject CreateVoxelGameObject(struct Shader* shader, float sheetIndexTopX, float sheetIndexTopY, float sheetIndexAroundX, float sheetIndexAroundY, float sheetIndexBottomX, float sheetIndexBottomY);
+#endif
 #endif
 void DrawGameObject(struct GameObject* go);
 

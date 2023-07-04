@@ -6,7 +6,7 @@ struct SpriteSheet g_SPRITE_SHEET;
 
 void SpriteSetup()
 {
-	stbi_set_flip_vertically_on_load(0);
+	stbi_set_flip_vertically_on_load(1);
 }
 
 struct Sprite CreateSprite(const char* path, enum ImageType imageType)
@@ -39,19 +39,36 @@ void BuildSpriteSheet(const char* path, enum ImageType imgType, float tileCountX
 	g_SPRITE_SHEET.sheet = CreateSprite(path, imgType);
 	g_SPRITE_SHEET.tileWidth = g_SPRITE_SHEET.sheet.width / tileCountX;
 	g_SPRITE_SHEET.tileHeight = g_SPRITE_SHEET.sheet.height / tileCountY;
-	//g_SPRITE_SHEET.lookupTable = malloc(blabla);
 }
 
-// TODO: Find a better way maybe
-float* GetSpriteXYFromTable(u8 tileIndexX, u8 tileIndexY)
+float* GetSpriteXYFromSheet(u8 tileIndexX, u8 tileIndexY)
 {
-	float x = g_SPRITE_SHEET.tileWidth * tileIndexX;
-	float y = g_SPRITE_SHEET.tileHeight * tileIndexY;
+	float x = g_SPRITE_SHEET.tileWidth * (tileIndexX-1);
+	float y = g_SPRITE_SHEET.sheet.height - (g_SPRITE_SHEET.tileHeight * tileIndexY); // y is flipped
 	float* ret = malloc(2 * sizeof(float));
 	ret[0] = x;
 	ret[1] = y;
 
 	return ret;
+}
+
+void GetBlockTexture(float* arr, enum BLOCK_TEX_NAMES texName)
+{
+	static float BlockTextureIndexes[5][6] =
+	{
+		// TOP - AROUND- BOTTOM
+		{ 4,4, 3,4, 5,4 },  // DIRTWGRASS
+		{ 5,4, 5,4, 5,4 },  // DIRT
+		{ 2,3, 3,3, 2,3 },	// TREE
+		{ 5,2, 5,2, 5,2 },	// ROCK
+		{ 3,5, 3,5, 3,5 }	// SAND
+	};
+
+	for (int i = 0; i < 6; i+=2)
+	{
+		arr[i] = g_SPRITE_SHEET.tileWidth * (BlockTextureIndexes[texName][i]-1);
+		arr[i+1] = g_SPRITE_SHEET.sheet.height - (g_SPRITE_SHEET.tileHeight * BlockTextureIndexes[texName][i+1]);
+	}
 }
 
 void UseSprite(struct Sprite* sprite)

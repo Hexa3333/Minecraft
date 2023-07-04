@@ -20,26 +20,24 @@ struct SpriteSheet
 {
 	struct Sprite sheet;
 	float tileWidth, tileHeight;
-	char** lookupTable;
 };
 extern struct SpriteSheet g_SPRITE_SHEET;
-
-typedef struct SheetIndex
+enum BLOCK_TEX_NAMES
 {
-	float x,y;
-} sheetindex_t;
-
-//#define SPRITESHEET_BLOCK(NAME)
-/*
- *	DirtGrass, Dirt, Rock, Water, Sand, Tree,
- *	Leaves, TNT, Glass, Gold, Diamond, RedThing,
- *	Wood, Coal
- * */
+	DIRTWGRASS,
+	DIRT,
+	TREE,
+	ROCK,
+	SAND
+};
 
 void SpriteSetup();
+
 struct Sprite CreateSprite(const char* path, enum ImageType);
 void BuildSpriteSheet(const char* path, enum ImageType, float tileCountX, float tileCountY);
-float* GetSpriteXYFromTable(u8 tileIndexX, u8 tileIndexY);
+float* GetSpriteXYFromSheet(u8 tileIndexX, u8 tileIndexY);
+void GetBlockTexture(float* arr, enum BLOCK_TEX_NAMES texName);
+
 void UseSprite(struct Sprite* sprite);
 void DeleteSprite(struct Sprite* sprite);
 
