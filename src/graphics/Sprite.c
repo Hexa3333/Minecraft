@@ -28,7 +28,7 @@ struct Sprite CreateSprite(const char* path, enum ImageType imageType)
 
 	stbi_image_free(data);
 
-#ifdef DEBUG
+#ifdef MC_DEBUG
 	glBindTexture(GL_TEXTURE_2D, 0);
 #endif
 	return ret;
@@ -71,7 +71,7 @@ void GetBlockTexture(float* arr, enum BLOCK_TEX_NAMES texName)
 	}
 }
 
-void UseSprite(struct Sprite* sprite)
+void BindSprite(struct Sprite* sprite)
 {
 	glBindTexture(GL_TEXTURE_2D, sprite->texObj);
 }

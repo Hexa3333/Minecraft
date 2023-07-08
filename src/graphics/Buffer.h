@@ -28,6 +28,7 @@ struct Buffer CreateBufferVTA(float* data, u32 sizeOfData);
 // Vertex-Texture-Normals
 struct Buffer CreateBufferVTNA(float* data, u32 sizeOfData);
 struct Buffer CreateBufferTEST(float* data, u32 sizeOfData);
+void BindBuffer(struct Buffer* buffer);
 void DrawBufferE(struct Buffer* buffer);
 void DrawBufferA(struct Buffer* buffer);
 enum BufferType DetermineBufferType(struct Buffer* buffer);

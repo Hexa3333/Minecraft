@@ -38,7 +38,7 @@ void BuildSpriteSheet(const char* path, enum ImageType, float tileCountX, float 
 float* GetSpriteXYFromSheet(u8 tileIndexX, u8 tileIndexY);
 void GetBlockTexture(float* arr, enum BLOCK_TEX_NAMES texName);
 
-void UseSprite(struct Sprite* sprite);
+void BindSprite(struct Sprite* sprite);
 void DeleteSprite(struct Sprite* sprite);
 
 #endif // SPRITE_H

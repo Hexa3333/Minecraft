@@ -33,13 +33,11 @@ static float* CalculateAverageNormals(float* Triangle)
 
 	return ret;
 }
-#if 1
 struct GameObject CreateVoxelGameObject(struct Shader* shader, enum BLOCK_TEX_NAMES texName)
 {
 	float blockTextureUVs[6];
 	GetBlockTexture(blockTextureUVs, texName);
 
-	struct GameObject ret;
 	float uv_topX0 = blockTextureUVs[0] / g_SPRITE_SHEET.sheet.width;
 	float uv_topX1 = (blockTextureUVs[0] + g_SPRITE_SHEET.tileWidth) / g_SPRITE_SHEET.sheet.width;
 	float uv_topY0 = blockTextureUVs[1] / g_SPRITE_SHEET.sheet.width;
@@ -101,21 +99,22 @@ struct GameObject CreateVoxelGameObject(struct Shader* shader, enum BLOCK_TEX_NA
 	    -0.5f,  0.5f,  0.5f,  uv_topX0, uv_topY0, 0.0f, 1.0f, 0.0f // bottom-left
 	};                                             
 	
-	ret.buffer = CreateBufferVTNA((float*)cubeVertices, sizeof(cubeVertices));
-	ret.shader = *shader;                          
+	struct GameObject ret;
+	ret.buffer = CreateBufferVTNA(cubeVertices, sizeof(cubeVertices));
+	ret.shader = *shader;
 	ret.render = DetermineDrawFunc(DetermineBufferType(&ret.buffer));
-	ret.model = GLMS_MAT4_IDENTITY;                
-                                                   
-	return ret;                                    
-}                                                  
-#endif
+	ret.model = GLMS_MAT4_IDENTITY;
 
-void DrawGameObject(struct GameObject* go)         
-{                                                  
-#ifdef NO_SPRITE_SHEET                             
-	UseSprite(&go->sprite);                        
-#endif                                             
+	return ret;
+}
+
+void DrawGameObject(struct GameObject* go)
+{
+#ifdef NO_SPRITE_SHEET
+	UseSprite(&go->sprite);
+#endif
 	SendUniformMat4(&go->shader, "model", &go->model); 
 	UseShader(&go->shader);
+	BindBuffer(&go->buffer);
 	go->render(&go->buffer);
 }

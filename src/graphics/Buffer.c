@@ -2,8 +2,7 @@
 #include <glad/glad.h>
 #include <stdbool.h>
 
-#if 0
-struct Buffer CreateBufferV(float* data, u32 sizeOfVertices,
+struct Buffer CreateBufferVE(float* data, u32 sizeOfVertices,
 							u32* indices, u32 sizeOfIndices)
 {
 
@@ -27,16 +26,13 @@ struct Buffer CreateBufferV(float* data, u32 sizeOfVertices,
 	glEnableVertexAttribArray(0);
 
 
-#ifdef DEBUG
+#ifdef MC_DEBUG
 	glBindVertexArray(0);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 #endif
-	
 	return ret;
-
 }
-#endif
 
 struct Buffer CreateBufferVTE(float* data, u32 sizeOfData,
 							u32* indices, u32 sizeOfIndices)
@@ -66,7 +62,7 @@ struct Buffer CreateBufferVTE(float* data, u32 sizeOfData,
 	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
 	glEnableVertexAttribArray(1);
 
-#ifdef DEBUG
+#ifdef MC_DEBUG
 	glBindVertexArray(0);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
@@ -103,7 +99,7 @@ struct Buffer CreateBufferVTNA(float* data, u32 sizeOfData)
 	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, ret.stride, (void*)(5 * sizeof(float)));
 	glEnableVertexAttribArray(2);
 
-#ifdef DEBUG
+#ifdef MC_DEBUG
 	glBindVertexArray(0);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 #endif
@@ -136,7 +132,7 @@ struct Buffer CreateBufferVTA(float* data, u32 sizeOfData)
 	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, ret.stride, (void*)(3 * sizeof(float)));
 	glEnableVertexAttribArray(1);
 
-#ifdef DEBUG
+#ifdef MC_DEBUG
 	glBindVertexArray(0);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 #endif
@@ -145,14 +141,24 @@ struct Buffer CreateBufferVTA(float* data, u32 sizeOfData)
 
 }
 
+void BindBuffer(struct Buffer* buffer)
+{
+	enum BufferType bf = DetermineBufferType(buffer);
+	glBindVertexArray(buffer->VAO);
+	glBindBuffer(GL_ARRAY_BUFFER, buffer->VBO);
+	if (bf == V | bf == VT | bf == VTN)
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, buffer->VBO);
+}
+
 void DrawBufferE(struct Buffer* buffer)
 {
-	glBindVertexArray(buffer->VAO);
+	BindBuffer(buffer);
 	glDrawElements(GL_TRIANGLES, buffer->sizeOfIndices, GL_UNSIGNED_INT, 0);
 }
 
 void DrawBufferA(struct Buffer* buffer)
 {
+	BindBuffer(buffer);
 	glDrawArrays(GL_TRIANGLES, 0, buffer->sizeOfData);
 }
 

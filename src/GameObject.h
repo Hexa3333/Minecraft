@@ -24,5 +24,6 @@ struct GameObject CreateGameObject(struct Buffer* buffer, struct Shader* shader)
 #endif
 struct GameObject CreateVoxelGameObject(struct Shader* shader, enum BLOCK_TEX_NAMES texName);
 void DrawGameObject(struct GameObject* go);
+void DestroyGameObject(struct GameObject* go);
 
 #endif // GAMEOBJECT_H

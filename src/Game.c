@@ -4,6 +4,7 @@
 #include "Input.h"
 
 struct Window g_MainWindow;
+mat4s g_projection;
 
 static bool mouseFirstEnter;
 static GLFWwindow* windowObj;
@@ -36,6 +37,10 @@ bool InitGame(const char* Title, u16 width, u16 height)
 	SpriteSetup();
 	BuildSpriteSheet("res/Sprites/blocks.png", 0, 5, 5);
 	
+	float zNear = 0.1f;
+	float zFar = 100.0f;
+	// Projection Matrix
+	g_projection = glms_perspective(glm_rad(45.0f), (float)(g_MainWindow.screenHeight / g_MainWindow.screenWidth), zNear, zFar);
 	
 	// Mouse Input
 	g_MInput.lastX = g_MainWindow.screenWidth / 2.0f;
