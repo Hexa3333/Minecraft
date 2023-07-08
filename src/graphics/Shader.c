@@ -212,6 +212,19 @@ void SendUniformVec3(struct Shader* shader, const char* uniformName, vec3s* var)
 	glUniform3f(glGetUniformLocation(shader->program, uniformName), var->x, var->y, var->z);
 }
 
+void SendDirectionalLight(struct Shader* shader, struct DirectionalLight directionalLight)
+{
+	SendUniformVec3(shader, "directionalLight.color", &directionalLight.color);
+	SendUniformF(shader, "directionalLight.intensity", directionalLight.intensity);
+	SendUniformVec3(shader, "directionalLight.direction", &directionalLight.direction);
+}
+
+void SendAmbientLight(struct Shader* shader, struct AmbientLight ambientLight)
+{
+	SendUniformVec3(shader, "ambientLight.color", &ambientLight.color);
+	SendUniformF(shader, "ambientLight.intensity", ambientLight.intensity);
+}
+
 void DestroyShader(struct Shader* shader)
 {
 	glDeleteShader(shader->vertexShader);

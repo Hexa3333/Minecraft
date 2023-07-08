@@ -10,7 +10,7 @@ SRC = $(wildcard src/*.c) $(wildcard src/**/*.c)
 
 all:
 	mkdir -p bin/
-	$(CC) $(CFLAGS) $(SRC) $(INC) $(LDFLAGS) -o $(BIN)
+	$(CC) $(CFLAGS) -DMC_DEBUG $(SRC) $(INC) $(LDFLAGS) -o $(BIN)
 
 libs:
 	cd glfw && cmake . && make
