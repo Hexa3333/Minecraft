@@ -77,12 +77,13 @@ struct Shader CreateShaderVF(const char* vshPath, const char* fshPath)
 		}
 	}
 
-	ret.vertexShader = vertexShader;
-	ret.fragmentShader = fragmentShader;
+	ret._trash.vertexShader = vertexShader;
+	ret._trash.fragmentShader = fragmentShader;
 	ret.program = shaderProgram;
 	return ret;
 }
 
+#if 0
 struct Shader CreateShaderFromFile(const char* path)
 {
 	struct Shader ret = {0};
@@ -190,7 +191,7 @@ struct Shader CreateShaderFromFile(const char* path)
 
 	return ret;
 }
-
+#endif
 
 void UseShader(struct Shader* shader)
 {
@@ -227,7 +228,7 @@ void SendAmbientLight(struct Shader* shader, struct AmbientLight ambientLight)
 
 void DestroyShader(struct Shader* shader)
 {
-	glDeleteShader(shader->vertexShader);
-	glDeleteShader(shader->fragmentShader);
+	glDeleteShader(shader->_trash.vertexShader);
+	glDeleteShader(shader->_trash.fragmentShader);
 	glDeleteProgram(shader->program);
 }

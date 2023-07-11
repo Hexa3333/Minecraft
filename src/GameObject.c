@@ -1,4 +1,5 @@
 #include "GameObject.h"
+#include "graphics/Camera.h"
 
 struct GameObject CreateGameObject(struct Buffer* buffer, struct Shader* shader)
 {
@@ -6,6 +7,17 @@ struct GameObject CreateGameObject(struct Buffer* buffer, struct Shader* shader)
 	ret.buffer = *buffer;
 	ret.shader = *shader;
 	ret.render = DetermineDrawFunc(DetermineBufferType(buffer));
+	ret.model = GLMS_MAT4_IDENTITY;
+
+	return ret;
+}
+
+struct GameObject CreateGameObjectSpex(struct Buffer* buffer, struct Shader* shader, void* func)
+{
+	struct GameObject ret;
+	ret.buffer = *buffer;
+	ret.shader = *shader;
+	ret.render = func;
 	ret.model = GLMS_MAT4_IDENTITY;
 
 	return ret;
@@ -114,7 +126,8 @@ void DrawGameObject(struct GameObject* go)
 	UseSprite(&go->sprite);
 #endif
 	SendUniformMat4(&go->shader, "model", &go->model); 
+	SendUniformMat4(&go->shader, "view", &g_View); 
+	SendUniformMat4(&go->shader, "projection", &g_Projection); 
 	UseShader(&go->shader);
-	BindBuffer(&go->buffer);
 	go->render(&go->buffer);
 }

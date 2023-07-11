@@ -3,6 +3,9 @@
 
 #include <cglm/struct.h>
 
+extern mat4s g_Projection;
+extern mat4s g_View;
+
 struct Camera
 {
 	vec3s position;
@@ -13,8 +16,8 @@ struct Camera
 };
 extern struct Camera g_MainCamera;
 
-mat4s SetView();
-mat4s UpdateView();
+void SetView();
+void UpdateView();
 
 
 #endif // CAMERA_H

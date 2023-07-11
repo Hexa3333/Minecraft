@@ -13,7 +13,6 @@ struct Window
 	u16 screenWidth, screenHeight;
 };
 extern struct Window g_MainWindow;
-extern mat4s g_projection;
 
 bool InitGame(const char* Title, u16 width, u16 height);
 static inline bool GetGameShouldRun() { return !glfwWindowShouldClose(g_MainWindow.object); };

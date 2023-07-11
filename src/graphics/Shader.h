@@ -8,13 +8,18 @@
 struct Shader
 {
 	GLuint program;
-	GLuint vertexShader;
-	GLuint fragmentShader;
+	struct Trash
+	{
+		GLuint vertexShader;
+		GLuint fragmentShader;
+	} _trash;
 };
 
 // Use 3 $ to split vertex/fragment sources
 struct Shader CreateShaderVF(const char* vshPath, const char* fshPath);
+#if 0
 struct Shader CreateShaderFromFile(const char* path);
+#endif
 void UseShader(struct Shader* shader);
 void SendUniformMat4(struct Shader* shader, const char* uniformName, mat4s* var);
 void SendUniformF(struct Shader* shader, const char* uniformName, float var);
