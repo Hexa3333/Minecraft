@@ -10,7 +10,6 @@ struct Buffer CreateBufferVA(float* data, u32 sizeOfData)
 	ret.indices = NULL;
 	ret.sizeOfIndices = 0;
 	ret.stride = 3 * sizeof(float);
-	ret.Bind = DetermineBindFunc(DetermineBufferType(&ret));
 
 	glGenVertexArrays(1, &ret.VAO);
 	glGenBuffers(1, &ret.VBO);
@@ -40,7 +39,6 @@ struct Buffer CreateBufferVE(float* data, u32 sizeOfData,
 	ret.indices = indices;
 	ret.sizeOfIndices = sizeOfIndices;
 	ret.stride = 3 * sizeof(float);
-	ret.Bind = DetermineBindFunc(DetermineBufferType(&ret));
 
 	glGenVertexArrays(1, &ret.VAO);
 	glGenBuffers(1, &ret.VBO);
@@ -72,7 +70,6 @@ struct Buffer CreateBufferVCA(float* data, u32 sizeOfData)
 	ret.indices = NULL;
 	ret.sizeOfIndices = 0;
 	ret.stride = 6 * sizeof(float);
-	ret.Bind = DetermineBindFunc(DetermineBufferType(&ret));
 
 	glGenVertexArrays(1, &ret.VAO);
 	glGenBuffers(1, &ret.VBO);
@@ -104,7 +101,6 @@ struct Buffer CreateBufferVTE(float* data, u32 sizeOfData,
 	ret.indices = indices;
 	ret.sizeOfIndices = sizeOfIndices;
 	ret.stride = 5 * sizeof(float);
-	ret.Bind = DetermineBindFunc(DetermineBufferType(&ret));
 
 	glGenVertexArrays(1, &ret.VAO);
 	glGenBuffers(1, &ret.VBO);
@@ -142,7 +138,6 @@ struct Buffer CreateBufferVTNA(float* data, u32 sizeOfData)
 	ret.indices = NULL;
 	ret.sizeOfIndices = 0;
 	ret.stride = 8 * sizeof(float);
-	ret.Bind = DetermineBindFunc(DetermineBufferType(&ret));
 
 	glGenVertexArrays(1, &ret.VAO);
 	glGenBuffers(1, &ret.VBO);
@@ -179,7 +174,6 @@ struct Buffer CreateBufferVTA(float* data, u32 sizeOfData)
 	ret.indices = NULL;
 	ret.sizeOfIndices = 0;
 	ret.stride = 5 * sizeof(float);
-	ret.Bind = DetermineBindFunc(DetermineBufferType(&ret));
 
 	glGenVertexArrays(1, &ret.VAO);
 	glGenBuffers(1, &ret.VBO);
@@ -204,36 +198,28 @@ struct Buffer CreateBufferVTA(float* data, u32 sizeOfData)
 
 }
 
-void BindBufferE(struct Buffer* buffer)
+void DrawBufferE(struct Buffer* buffer)
 {
-	enum BufferType bf = DetermineBufferType(buffer);
 	glBindVertexArray(buffer->VAO);
 	glBindBuffer(GL_ARRAY_BUFFER, buffer->VBO);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, buffer->EBO);
-}
 
-void BindBufferA(struct Buffer* buffer)
-{
-	enum BufferType bf = DetermineBufferType(buffer);
-	glBindVertexArray(buffer->VAO);
-	glBindBuffer(GL_ARRAY_BUFFER, buffer->VBO);
-}
-
-void DrawBufferE(struct Buffer* buffer)
-{
-	buffer->Bind(buffer);
 	glDrawElements(GL_TRIANGLES, buffer->sizeOfIndices, GL_UNSIGNED_INT, 0);
 }
 
 void DrawBufferA(struct Buffer* buffer)
 {
-	buffer->Bind(buffer);
+	glBindVertexArray(buffer->VAO);
+	glBindBuffer(GL_ARRAY_BUFFER, buffer->VBO);
+
 	glDrawArrays(GL_TRIANGLES, 0, buffer->sizeOfData);
 }
 
 void DrawBufferLine(struct Buffer* buffer)
 {
-	buffer->Bind(buffer);
+	glBindVertexArray(buffer->VAO);
+	glBindBuffer(GL_ARRAY_BUFFER, buffer->VBO);
+
 	glDrawArrays(GL_LINES, 0, buffer->sizeOfData);
 }
 
@@ -263,31 +249,6 @@ enum BufferType DetermineBufferType(struct Buffer* buffer)
 
 		default:
 			return -1;
-	}
-}
-
-void* DetermineBindFunc(enum BufferType bt)
-{
-	switch (bt)
-	{
-		case V:
-			return &BindBufferE;
-		case VC:
-			return &BindBufferE;
-		case VT:
-			return &BindBufferE;
-		case VTN:
-			return &BindBufferE;
-
-		case VA:
-			return &BindBufferA;
-		case VCA:
-			return &BindBufferA;
-		case VTA:
-			return &BindBufferA;
-		case VTNA:
-			return &BindBufferA;
-
 	}
 }
 

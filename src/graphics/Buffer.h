@@ -13,7 +13,6 @@ struct Buffer
 	u32* indices;
 	u32 sizeOfIndices;
 	u8 stride;
-	void (*Bind)(struct Buffer* self);
 };
 
 enum BufferType
@@ -36,15 +35,11 @@ struct Buffer CreateBufferVTA(float* data, u32 sizeOfData);
 struct Buffer CreateBufferVTNA(float* data, u32 sizeOfData);
 struct Buffer CreateBufferTEST(float* data, u32 sizeOfData);
 
-void BindBufferE(struct Buffer* buffer);
-void BindBufferA(struct Buffer* buffer);
-
 void DrawBufferE(struct Buffer* buffer);
 void DrawBufferA(struct Buffer* buffer);
 void DrawBufferLine(struct Buffer* buffer);
 
 enum BufferType DetermineBufferType(struct Buffer* buffer);
-void* DetermineBindFunc(enum BufferType bt);
 void* DetermineDrawFunc(enum BufferType bt);
 
 #endif // BUFFER_H
