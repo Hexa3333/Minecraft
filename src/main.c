@@ -25,17 +25,15 @@ int main(void)
 	mat4s view = SetView();
 
 	struct AmbientLight ambientLight = CreateAmbientLight((vec3s){1.0f, 1.0f, 1.0f}, 1.0f);
-	struct DirectionalLight directionalLight = CreateDirectionalLight((vec3s){1.0f,1.0f,1.0f}, 1.0f, (vec3s) { -1.5f, 1.0f, 0.0f });
-	struct GameObject tiles[1000];
-	for (int i = 0; i < 1000; i++) tiles[i] = CreateVoxelGameObject(&shadethis, DIRTWGRASS);
-	struct GameObject go2 = CreateVoxelGameObject(&shadethis, SAND);
-	struct GameObject go3 = CreateVoxelGameObject(&shadethis, SAND);
+	struct DirectionalLight directionalLight = CreateDirectionalLight((vec3s){1.0f,1.0f,1.0f}, 1.0f, (vec3s) { -0.1f, 0.3f, 0.0f });
+	struct GameObject tiles[100*5];
+	for (int i = 0; i < 100; i++) tiles[i] = CreateVoxelGameObject(&shadethis, DIRTWGRASS);
 
 	glBindTexture(GL_TEXTURE_2D, g_SPRITE_SHEET.sheet.texObj);
 	while (GetGameShouldRun())
 	{
 		CalculateDT();
-		LOG("FPS: %.1f", 1 / DT);
+		//LOG("FPS: %.1f", 1 / DT);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		KeyInput();
@@ -49,17 +47,12 @@ int main(void)
 
 
 		for (int i = 0; i < 10; ++i)
-			for (int j = 0; j < 100; ++j)
+			for (int j = 0; j < 10; ++j)
 			{
-				tiles[(i*10)+j].model = glms_translate(GLMS_MAT4_IDENTITY, (vec3s){ -5.0f + i, -j, 5.0f - i });
+				tiles[(i*10)+j].model = glms_translate(GLMS_MAT4_IDENTITY, (vec3s){ -5.0f + i, 0.0f, 5.0f - j });
 				SendUniformMat4(&shadethis, "model", &tiles[(i*10)+j].model);
-				DrawGameObject(&tiles[i*10 + j]);
+				DrawGameObject(&tiles[(i*10)+j]);
 			}
-
-		go2.model = glms_translate(GLMS_MAT4_IDENTITY, (vec3s){-1.0f, 0.0f, 0.0f});
-		DrawGameObject(&go2);
-		go3.model = glms_translate(GLMS_MAT4_IDENTITY, (vec3s){1.0f, 0.0f, 0.0f});
-		DrawGameObject(&go3);
 
 		if (glfwGetKey(g_MainWindow.object, GLFW_KEY_ESCAPE)) break;
 

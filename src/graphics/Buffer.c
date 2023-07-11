@@ -136,7 +136,7 @@ struct Buffer CreateBufferVTA(float* data, u32 sizeOfData)
 	glBindVertexArray(0);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 #endif
-	
+
 	return ret;
 
 }
@@ -147,7 +147,7 @@ void BindBuffer(struct Buffer* buffer)
 	glBindVertexArray(buffer->VAO);
 	glBindBuffer(GL_ARRAY_BUFFER, buffer->VBO);
 	if (bf == V | bf == VT | bf == VTN)
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, buffer->VBO);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, buffer->EBO);
 }
 
 void DrawBufferE(struct Buffer* buffer)
