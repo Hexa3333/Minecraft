@@ -129,6 +129,45 @@ struct Buffer CreateBufferVTE(float* data, u32 sizeOfData,
 
 }
 
+
+struct Buffer CreateBufferVTN(float* data, u32 sizeOfData, u32* indices, u32 sizeOfIndices)
+{
+	struct Buffer ret;
+	ret.data = data;
+	ret.sizeOfData = sizeOfData;
+	ret.indices = indices;
+	ret.sizeOfIndices = sizeOfIndices;
+	ret.stride = 8 * sizeof(float);
+
+	glGenVertexArrays(1, &ret.VAO);
+	glGenBuffers(1, &ret.VBO);
+	glGenBuffers(1, &ret.EBO);
+
+	glBindVertexArray(ret.VAO);
+	glBindBuffer(GL_ARRAY_BUFFER, ret.VBO);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ret.EBO);
+
+	glBufferData(GL_ARRAY_BUFFER, sizeOfData, data, GL_STATIC_DRAW);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeOfIndices, indices, GL_STATIC_DRAW);
+
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, ret.stride, (void*)0);
+	glEnableVertexAttribArray(0);
+
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, ret.stride, (void*)(3 * sizeof(float)));
+	glEnableVertexAttribArray(1);
+
+	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, ret.stride, (void*)(5 * sizeof(float)));
+	glEnableVertexAttribArray(2);
+
+#ifdef MC_DEBUG
+	glBindVertexArray(0);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+#endif
+	
+	return ret;
+}
+
 struct Buffer CreateBufferVTNA(float* data, u32 sizeOfData)
 {
 

@@ -22,6 +22,7 @@ struct SpriteSheet
 	float tileWidth, tileHeight;
 };
 extern struct SpriteSheet g_SPRITE_SHEET;
+
 enum BLOCK_TEX_NAMES
 {
 	DIRTWGRASS,

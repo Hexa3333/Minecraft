@@ -1,5 +1,6 @@
 #include "Game.h"
 #include "Time.h"
+#include "graphics/Shader.h"
 #include "graphics/Camera.h"
 #include "Input.h"
 
@@ -33,6 +34,7 @@ bool InitGame(const char* Title, u16 width, u16 height)
 	glEnable(GL_CULL_FACE);
 
 	// Component Setup
+	ShaderSetup();
 	SpriteSetup();
 	BuildSpriteSheet("res/Sprites/blocks.png", 0, 5, 5);
 	

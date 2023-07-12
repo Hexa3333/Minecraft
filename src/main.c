@@ -7,52 +7,44 @@
 #include <math.h>
 #include "common.h"
 #include "Time.h"
-#include "GameObject.h"
+#include "graphics/Block.h"
 #include "graphics/Camera.h"
+#include "graphics/Chunk.h"
+#include "graphics/Shader.h"
 #include "Game.h"
 
 #include <cglm/struct.h>
 #include <cglm/cam.h>
 
-// 12 floats
+// out: 12 floats
 void CreateLine(float* out, vec3s start, vec3s end, vec3s color)
 {
 	float data[] = {
 		start.x, start.y, start.z,	color.x, color.y, color.z,
 		end.x, end.y, end.z,		color.x, color.y, color.z
 	};
+
 	memcpy(out, data, sizeof(data));
 }
+
+const int chunkX = 50;
+const int chunkZ = 50;
 
 static void KeyInput();
 int main(void)
 {
 	InitGame("Minecraft", 720, 720);
-	struct Shader shadethis = CreateShaderVF("res/Shaders/BasicCubeV.glsl", "res/Shaders/BasicCubeF.glsl");
-
-	float dataR[12];
-	float dataG[12];
-	float dataB[12];
-	CreateLine(dataR, (vec3s){0,0,0}, (vec3s){1,0,0}, (vec3s){1,0,0});
-	CreateLine(dataG, (vec3s){0,0,0}, (vec3s){0,1,0}, (vec3s){0,1,0});
-	CreateLine(dataB, (vec3s){0,0,0}, (vec3s){0,0,1}, (vec3s){0,0,1});
 	
-	struct Buffer LineBufR = CreateBufferVCA(dataR, sizeof(dataR));
-	struct Buffer LineBufG = CreateBufferVCA(dataG, sizeof(dataG));
-	struct Buffer LineBufB = CreateBufferVCA(dataB, sizeof(dataB));
-
-	struct Shader lineShader = CreateShaderVF("res/Shaders/LineV.glsl", "res/Shaders/LineF.glsl");
-
-	struct GameObject LineR = CreateGameObjectSpex(&LineBufR, &lineShader, DrawBufferLine);
-	struct GameObject LineG = CreateGameObjectSpex(&LineBufG, &lineShader, DrawBufferLine);
-	struct GameObject LineB = CreateGameObjectSpex(&LineBufB, &lineShader, DrawBufferLine);
-
+	struct Shader shadethis = CreateShaderVF("res/Shaders/BasicCubeV.glsl", "res/Shaders/BasicCubeF.glsl");
 	struct AmbientLight ambientLight = CreateAmbientLight((vec3s){1.0f, 1.0f, 1.0f}, 1.0f);
-	struct DirectionalLight directionalLight = CreateDirectionalLight((vec3s){1.0f,1.0f,1.0f}, 1.0f, (vec3s) { -0.1f, 0.3f, 0.0f });
-#if 1
-	struct GameObject tiles[100];
-	for (int i = 0; i < 100; i++) tiles[i] = CreateVoxelGameObject(&shadethis, DIRTWGRASS);
-#endif
+	struct DirectionalLight directionalLight = CreateDirectionalLight((vec3s){1.0f,1.0f,1.0f}, 1.0f, (vec3s) { -0.1f, 0.2f, 0.0f });
+
+	float renderDistance = CHUNK_WIDTH * 4; // 4 chunks
+
+	struct Chunk ch[50*50];
+	for (int i = 0; i < 50; i++)
+		for (int j = 0; j < 50; j++)
+			ch[50*i + j] = CreateChunk(-10 * CHUNK_WIDTH + (i * CHUNK_WIDTH), -10 * CHUNK_DEPTH + (j * CHUNK_DEPTH));			
 
 	glBindTexture(GL_TEXTURE_2D, g_SPRITE_SHEET.sheet.texObj);
 	while (GetGameShouldRun())
@@ -60,32 +52,32 @@ int main(void)
 		CalculateDT();
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		//glClearColor(0.0f, 1.0, 0.0f, 1.0f);
+		LOG("Cam: (%.1f,%.1f,%.1f)", g_MainCamera.position.x, g_MainCamera.position.y, g_MainCamera.position.z);
 
 		UpdateView();
 		KeyInput();
 
-		SendAmbientLight(&shadethis, ambientLight);
-		SendDirectionalLight(&shadethis, directionalLight);
+		float pX = g_MainCamera.position.x;
+		float pY = g_MainCamera.position.y;
+		float pZ = g_MainCamera.position.z;
 
-		//DrawGameObject(&LineR);
-		//DrawGameObject(&LineG);
-		//DrawGameObject(&LineB);
+		for (int i = 0; i < 50*50; i++)
+		{
+			if (pX >= ch[i].x - renderDistance && pX < ch[i].x + renderDistance &&
+				pZ >= ch[i].z - renderDistance && pZ < ch[i].z + renderDistance)
+				DrawChunk(&ch[i]);
+		}
 		
-#if 1
-		for (int i = 0; i < 10; ++i)
-			for (int j = 0; j < 10; ++j)
-			{
-				tiles[(i*10)+j].model = glms_translate(GLMS_MAT4_IDENTITY, (vec3s){ -5.0f + i, -1.0f, 5.0f - j });
-				SendUniformMat4(&shadethis, "model", &tiles[(i*10)+j].model);
-				DrawGameObject(&tiles[(i*10)+j]);
-			}
-#endif
+		SendAmbientLight(&g_TerrainShader, ambientLight);
+		SendDirectionalLight(&g_TerrainShader, directionalLight);
 
 		if (glfwGetKey(g_MainWindow.object, GLFW_KEY_ESCAPE)) break;
 
 		glfwSwapBuffers(g_MainWindow.object);
 		glfwPollEvents();
 	}
+
+	for (int i = 0; i < 50*50; i++) FreeChunk(&ch[i]);			
 
 	KillGame();
 }
@@ -110,4 +102,7 @@ void KeyInput()
 		if (glfwGetKey(g_MainWindow.object, GLFW_KEY_SPACE))
 			g_MainCamera.position.y += 8.0f * DT;
 
+		if (glfwGetKey(g_MainWindow.object, GLFW_KEY_F))
+			glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+		else glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 }

@@ -15,7 +15,9 @@ struct Shader
 	} _trash;
 };
 
-// Use 3 $ to split vertex/fragment sources
+extern struct Shader g_TerrainShader;
+
+void ShaderSetup();
 struct Shader CreateShaderVF(const char* vshPath, const char* fshPath);
 #if 0
 struct Shader CreateShaderFromFile(const char* path);

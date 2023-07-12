@@ -5,6 +5,12 @@
 
 #include "Shader.h"
 
+struct Shader g_TerrainShader;
+void ShaderSetup()
+{
+	g_TerrainShader = CreateShaderVF("res/Shaders/BasicCubeV.glsl", "res/Shaders/BasicCubeF.glsl");
+}
+
 struct Shader CreateShaderVF(const char* vshPath, const char* fshPath)
 {
 	struct Shader ret = {0};
