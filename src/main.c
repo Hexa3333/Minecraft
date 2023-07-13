@@ -27,8 +27,11 @@ void CreateLine(float* out, vec3s start, vec3s end, vec3s color)
 	memcpy(out, data, sizeof(data));
 }
 
-const int chunkX = 50;
-const int chunkZ = 50;
+vec3s GetMiddle(vec3s in)
+{
+	return (vec3s) {in.x / 2, in.y / 2, in.z / 2};
+}
+
 
 static void KeyInput();
 int main(void)
@@ -41,32 +44,42 @@ int main(void)
 
 	float renderDistance = CHUNK_WIDTH * 4; // 4 chunks
 
-	struct Chunk ch[50*50];
-	for (int i = 0; i < 50; i++)
-		for (int j = 0; j < 50; j++)
-			ch[50*i + j] = CreateChunk(-10 * CHUNK_WIDTH + (i * CHUNK_WIDTH), -10 * CHUNK_DEPTH + (j * CHUNK_DEPTH));			
-
+	struct Chunk* chunks = malloc(8 * 8 * sizeof(struct Chunk));
+	for (int x = 0; x < 8; x++)
+		for (int z = 0; z < 8; z++)
+		{
+			chunks[x*8 + z] = CreateChunk((-4 * CHUNK_WIDTH) + (x * CHUNK_WIDTH), -z * CHUNK_DEPTH);
+		}
+	
 	glBindTexture(GL_TEXTURE_2D, g_SPRITE_SHEET.sheet.texObj);
 	while (GetGameShouldRun())
 	{
 		CalculateDT();
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		//glClearColor(0.0f, 1.0, 0.0f, 1.0f);
+		//printf("\033[H\033[J"); // Clear
+
 		LOG("Cam: (%.1f,%.1f,%.1f)", g_MainCamera.position.x, g_MainCamera.position.y, g_MainCamera.position.z);
 
 		UpdateView();
 		KeyInput();
 
+
 		float pX = g_MainCamera.position.x;
 		float pY = g_MainCamera.position.y;
 		float pZ = g_MainCamera.position.z;
 
-		for (int i = 0; i < 50*50; i++)
-		{
-			if (pX >= ch[i].x - renderDistance && pX < ch[i].x + renderDistance &&
-				pZ >= ch[i].z - renderDistance && pZ < ch[i].z + renderDistance)
-				DrawChunk(&ch[i]);
-		}
+		for (int x = 0; x < 8; x++)
+			for (int z = 0; z < 8; z++)
+			{
+				vec3s nextChunkPos = GetMiddle((vec3s){chunks[x*8 + z].x, 0, chunks[x*8 + z].z});
+
+				if (nextChunkPos.x < pX + renderDistance && nextChunkPos.x > pX - renderDistance)
+				{
+					DrawChunk(&chunks[x*8 + z]);
+				}
+			}
+
 		
 		SendAmbientLight(&g_TerrainShader, ambientLight);
 		SendDirectionalLight(&g_TerrainShader, directionalLight);
@@ -77,7 +90,7 @@ int main(void)
 		glfwPollEvents();
 	}
 
-	for (int i = 0; i < 50*50; i++) FreeChunk(&ch[i]);			
+	free(chunks);
 
 	KillGame();
 }
