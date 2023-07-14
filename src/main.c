@@ -20,9 +20,12 @@ int main(void)
 	struct DirectionalLight directionalLight = CreateDirectionalLight((vec3s){1.0f,1.0f,1.0f}, 1.0f, (vec3s) { -0.8f, 0.2f, 0.0f });
 
 	struct Chunk testChunk = CreateChunk(0,0);
-	printf("testBlock.left = (%.1f, %.1f)\n", testChunk.blocks[CHUNK_INDEXER(0,0)].neighbors.left->position.x, testChunk.blocks[CHUNK_INDEXER(0,0)].neighbors.left->position.z);
-	printf("testBlock.right = (%.1f, %.1f)\n", testChunk.blocks[CHUNK_INDEXER(0,0)].neighbors.right->position.x, testChunk.blocks[CHUNK_INDEXER(0,0)].neighbors.right->position.z);
 	
+	printf("testBlock.left = (%.1f, %.1f)\n", testChunk.blocks[CHUNK_INDEXER(1,1)].neighbors.left->position.x, testChunk.blocks[CHUNK_INDEXER(1,1)].neighbors.left->position.z);
+	printf("testBlock.right = (%.1f, %.1f)\n", testChunk.blocks[CHUNK_INDEXER(1,1)].neighbors.right->position.x, testChunk.blocks[CHUNK_INDEXER(1,1)].neighbors.right->position.z);
+	printf("testBlock.front = (%.1f, %.1f)\n", testChunk.blocks[CHUNK_INDEXER(1,1)].neighbors.front->position.x, testChunk.blocks[CHUNK_INDEXER(1,1)].neighbors.front->position.z);
+	printf("testBlock.behind = (%.1f, %.1f)\n", testChunk.blocks[CHUNK_INDEXER(1,1)].neighbors.behind->position.x, testChunk.blocks[CHUNK_INDEXER(1,1)].neighbors.behind->position.z);
+
 	glBindTexture(GL_TEXTURE_2D, g_SPRITE_SHEET.sheet.texObj);
 	while (GetGameShouldRun())
 	{

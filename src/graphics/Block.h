@@ -21,7 +21,7 @@ struct Block
 		struct Block* left;
 		struct Block* right;
 		struct Block* front;
-		struct Block* back;
+		struct Block* behind;
 	} neighbors;
 };
 
