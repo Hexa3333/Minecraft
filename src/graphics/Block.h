@@ -13,35 +13,21 @@ struct Block
 	vec3s position;
 	mat4s model;
 	void (*render)(struct Buffer* buffer);
-};
 
-enum Direction
-{
-	FRONT = 1,
-	BACK = -1,
-
-	UP = 2,
-	DOWN = -2,
-
-	LEFT = -3,
-	RIGHT = 3
-};
-
-
-static vec3s Faces[6] = {
-	{ 0, 0, 1 }, // BACK
-	{ 0, 0, -1 }, // FRONT 
-
-	{ 0, 1, 0 }, // UP
-	{ 0, -1, 0 }, // DOWN
-
-	{ -1, 0, 0 }, // LEFT
-	{ 1, 0, 0 }, // RIGHT
+	struct
+	{
+		struct Block* above;
+		struct Block* below;
+		struct Block* left;
+		struct Block* right;
+		struct Block* front;
+		struct Block* back;
+	} neighbors;
 };
 
 struct Block CreateGameObject(struct Buffer* buffer, struct Shader* shader);
 struct Block CreateGameObjectSpex(struct Buffer* buffer, struct Shader* shader, void* func);
-struct Block CreateBlock(struct Shader* shader, enum BLOCK_TEX_NAMES texName);
+struct Block CreateBlock(struct Shader* shader, enum BLOCK_TEX_NAMES texName, vec3s position);
 void DrawGameObject(struct Block* go);
 void DestroyGameObject(struct Block* go);
 

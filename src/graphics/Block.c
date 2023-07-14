@@ -23,7 +23,7 @@ struct Block CreateGameObjectSpex(struct Buffer* buffer, struct Shader* shader, 
 	return ret;
 }
 
-struct Block CreateBlock(struct Shader* shader, enum BLOCK_TEX_NAMES texName)
+struct Block CreateBlock(struct Shader* shader, enum BLOCK_TEX_NAMES texName, vec3s position)
 {
 	float blockTextureUVs[6];
 	GetBlockTexture(blockTextureUVs, texName);
@@ -96,9 +96,12 @@ struct Block CreateBlock(struct Shader* shader, enum BLOCK_TEX_NAMES texName)
 	ret.shader = shader;
 	ret.render = DetermineDrawFunc(DetermineBufferType(&ret.buffer));
 	ret.model = GLMS_MAT4_IDENTITY;
+	ret.position = position;
+	memset(&ret.neighbors, 0, 6*sizeof(struct Block*));
 
 	return ret;
 }
+
 
 void DrawGameObject(struct Block* go)
 {
