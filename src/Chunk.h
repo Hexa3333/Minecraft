@@ -16,22 +16,10 @@
 
 struct Chunk
 {
-	double positionX, positionZ;
+	vec3s position;
 	struct Block blocks[CHUNK_WIDTH * CHUNK_DEPTH];
 };
-
-struct ChunkMap
-{
-	struct Chunk chunks[RENDER_DISTANCE];
-	struct Chunk* inView;
-	struct Chunk* outOfView;
-	u8 chunksInView;
-};
-extern struct ChunkMap chunkMap;
-
 struct Chunk CreateChunk(u32 x, u32 z);
 void DrawChunk(struct Chunk* chunk);
-void SetChunkMap();
-void DrawChunkMap();
 
 #endif // CHUNK_H
