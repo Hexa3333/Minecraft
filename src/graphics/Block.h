@@ -15,8 +15,9 @@ struct Block
 	void (*render)(struct Buffer* buffer);
 
 	struct {
-		bool isVisible;
-		bool isTransparent;
+		bool isVisible: 1;
+		bool isTransparent: 1;
+		bool canLeaveParticles: 1;
 	} props;
 	
 	struct
@@ -29,6 +30,7 @@ struct Block
 		struct Block* behind;
 	} neighbors;
 };
+
 
 struct Block CreateGameObject(struct Buffer* buffer, struct Shader* shader);
 struct Block CreateGameObjectSpex(struct Buffer* buffer, struct Shader* shader, void* func);

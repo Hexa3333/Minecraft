@@ -232,6 +232,12 @@ void SendAmbientLight(struct Shader* shader, struct AmbientLight ambientLight)
 	SendUniformF(shader, "ambientLight.intensity", ambientLight.intensity);
 }
 
+void SendSun(struct Shader* shader)
+{
+	SendDirectionalLight(shader, g_Sun.directionalLight);
+	SendAmbientLight(shader, g_Sun.ambientLight);
+}
+
 void DestroyShader(struct Shader* shader)
 {
 	glDeleteShader(shader->_trash.vertexShader);

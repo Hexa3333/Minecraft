@@ -3,6 +3,7 @@
 #include "graphics/Shader.h"
 #include "graphics/Camera.h"
 #include "Input.h"
+#include "Chunk.h"
 
 struct Window g_MainWindow;
 
@@ -36,6 +37,8 @@ bool InitGame(const char* Title, u16 width, u16 height)
 	// Component Setup
 	ShaderSetup();
 	SpriteSetup();
+	ChunkMapSetup();
+	SunSet(.7f);
 	BuildSpriteSheet("res/Sprites/blocks.png", 0, 5, 5);
 	
 	float zNear = 0.1f;

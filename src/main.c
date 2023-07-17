@@ -9,22 +9,22 @@
 #include "graphics/Camera.h"
 #include "Game.h"
 #include "util.h"
+#include "graphics/Light.h"
 
+float sunMod = 1.0f;
 static void KeyInput();
 int main(void)
 {
 	InitGame("Minecraft", 720, 720);
 	
 	struct Shader shadethis = CreateShaderVF("res/Shaders/BasicCubeV.glsl", "res/Shaders/BasicCubeF.glsl");
-	struct AmbientLight ambientLight = CreateAmbientLight((vec3s){1.0f, 1.0f, 1.0f}, 1.0f);
-	struct DirectionalLight directionalLight = CreateDirectionalLight((vec3s){1.0f,1.0f,1.0f}, 1.0f, (vec3s) { -0.3f, 0.2f, 0.0f });
-
-	struct Chunk heyya[1];
-	for (int i = 0; i < 1; i++)
-		for (int j = 0; j < 1; j++)
+	struct Chunk* heyya = malloc(3*3 * sizeof(struct Chunk));
+	for (int i = 0; i < 3; i++)
+		for (int j = 0; j < 3; j++)
 		{
-			heyya[i*1 + j] = CreateChunk(i*CHUNK_WIDTH,j*CHUNK_DEPTH);
+			heyya[i*3 + j] = CreateChunk(i*CHUNK_WIDTH,j*CHUNK_DEPTH);
 		}
+	bool morning = true;
 	glBindTexture(GL_TEXTURE_2D, g_SPRITE_SHEET.sheet.texObj);
 	while (GetGameShouldRun())
 	{
@@ -41,13 +41,14 @@ int main(void)
 		float pZ = g_MainCamera.position.z;
 
 		printf("Camera = (%.1f,%.1f,%.1f)\n", pX, pY, pZ);
+		printf("FPS = %.1f\n", 1/DT);
 
-		SendAmbientLight(&g_TerrainShader, ambientLight);
-		SendDirectionalLight(&g_TerrainShader, directionalLight);
-		for (int i = 0; i < 1; i++)
-			for (int j = 0; j < 1; j++)
+		SunSet(sunMod);
+		SendSun(&g_TerrainShader);
+		for (int i = 0; i < 3; i++)
+			for (int j = 0; j < 3; j++)
 		{
-			DrawChunk(&heyya[i*1 + j]);
+			DrawChunk(&heyya[i*3 + j]);
 		}
 
 		if (glfwGetKey(g_MainWindow.object, GLFW_KEY_ESCAPE)) break;
@@ -55,10 +56,10 @@ int main(void)
 		glfwSwapBuffers(g_MainWindow.object);
 		glfwPollEvents();
 	}
+	free(heyya);
 
 	KillGame();
 }
-
 void KeyInput()
 {
 		vec3s cross = glms_vec3_cross(g_MainCamera.front, g_MainCamera.up);

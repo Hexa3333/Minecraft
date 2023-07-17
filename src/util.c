@@ -22,6 +22,7 @@ void SetNeighboringBlocks(struct Chunk* chunk, u8 blockIndexX, u8 blockIndexY, u
 	curBlock->neighbors.below =  (blockIndexY != 0) ? &chunk->blocks[blockIndexY-1][blockIndexZ][blockIndexX] : NULL;
 	curBlock->neighbors.front =  (blockIndexZ != 0) ? &chunk->blocks[blockIndexY][blockIndexZ-1][blockIndexX] : NULL;
 	curBlock->neighbors.behind = (blockIndexZ != CHUNK_DEPTH-1) ? &chunk->blocks[blockIndexY][blockIndexZ+1][blockIndexX] : NULL;
+	
 }
 
 void SetChunkInnerBlocksInvisible(struct Chunk* chunk)
@@ -46,7 +47,7 @@ void SetChunkInnerBlocksInvisible(struct Chunk* chunk)
 			}
 }
 
-void CullUnseenBlocks(struct Chunk* chunk)
+void CullBackFaces(struct Chunk* chunk)
 {
 	vec3s cameraPos = g_MainCamera.position;
 	

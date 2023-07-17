@@ -28,6 +28,7 @@ void SendUniformF(struct Shader* shader, const char* uniformName, float var);
 void SendUniformVec3(struct Shader* shader, const char* uniformName, vec3s* var);
 void SendAmbientLight(struct Shader* shader, struct AmbientLight ambientLight);
 void SendDirectionalLight(struct Shader* shader, struct DirectionalLight directionalLight);
+void SendSun(struct Shader* shader);
 void DestroyShader(struct Shader* shader);
 void DetermineUniformFunc();
 

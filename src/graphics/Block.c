@@ -43,7 +43,6 @@ struct Block CreateBlock(struct Shader* shader, enum BLOCK_TEX_NAMES texName, ve
 	float uv_bottomY0 = blockTextureUVs[5] / g_SPRITE_SHEET.sheet.height;
 	float uv_bottomY1 = (blockTextureUVs[5] + g_SPRITE_SHEET.tileHeight) / g_SPRITE_SHEET.sheet.height;
 	
-#if 1
 	float cubeVertices[] = {
 		// VERTICES				UVs						NORMALS
 	    // Back face
@@ -89,7 +88,6 @@ struct Block CreateBlock(struct Shader* shader, enum BLOCK_TEX_NAMES texName, ve
 	    -0.5f,  0.5f, -0.5f,  uv_topX0, uv_topY1, 0.0f, 1.0f, 0.0f, // top left far
 	    -0.5f,  0.5f,  0.5f,  uv_topX0, uv_topY0, 0.0f, 1.0f, 0.0f // top left near
 	};
-#endif
 	
 	struct Block ret;
 	ret.buffer = CreateBufferVTNA(cubeVertices, sizeof(cubeVertices));

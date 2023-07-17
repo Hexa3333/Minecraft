@@ -11,21 +11,32 @@
 #define CHUNK_TOTAL_BLOCKS CHUNK_WIDTH*CHUNK_HEIGHT*CHUNK_DEPTH
 #define CHUNK_INDEX(x,y,z) y][z][x
 
-#define MAX_VISIBLE_CHUNKS 2 * 2
+#define MAX_VISIBLE_CHUNKS_X 2
+#define MAX_VISIBLE_CHUNKS_Z 2
+#define MAX_VISIBLE_CHUNKS MAX_VISIBLE_CHUNKS_X * MAX_VISIBLE_CHUNKS_Z
+#define CHUNK_MAP_INDEX(x,z) z*MAX_VISIBLE_CHUNKS_Z + x
 
 struct Chunk
 {
 	vec3s position;
 	struct Block blocks[CHUNK_HEIGHT][CHUNK_DEPTH][CHUNK_WIDTH];
+	u64 id;
 };
 
 struct Chunk CreateChunk(u32 x, u32 z);
 void DrawChunk(struct Chunk* chunk);
 
+
 extern struct _ChunkMap
 {
 	struct Chunk chunks[MAX_VISIBLE_CHUNKS];
+
+	struct {
+		u64 availables[MAX_VISIBLE_CHUNKS];
+		u8 numOfAvailables;
+	} list;
 } g_ChunkMap;
 
+void ChunkMapSetup();
 
 #endif // CHUNK_H
