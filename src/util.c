@@ -11,14 +11,36 @@ void CreateLine(float* out, vec3s start, vec3s end, vec3s color)
 	memcpy(out, data, sizeof(data));
 }
 
-void GetNeighboringBlocks(struct Chunk* chunk, u16 blockIndex)
+void SetNeighboringBlocks(struct Chunk* chunk, u8 blockIndexX, u8 blockIndexY, u8 blockIndexZ)
 {
-	struct Block* curBlock = &chunk->blocks[blockIndex];
-	u8 blockIndexX = blockIndex % CHUNK_WIDTH;
-	u8 blockIndexZ = blockIndex / CHUNK_WIDTH;
+	struct Block* curBlock = &chunk->blocks[blockIndexY][blockIndexZ][blockIndexX];
 	
-	curBlock->neighbors.left = (blockIndex-1 % CHUNK_WIDTH == 0 || blockIndexX != 0) ? &chunk->blocks[blockIndex - 1] : NULL;
-	curBlock->neighbors.right = (blockIndex+1 % CHUNK_WIDTH == 0 || blockIndexX != 0) ? &chunk->blocks[blockIndex + 1] : NULL;
-	curBlock->neighbors.front = ((blockIndex-CHUNK_DEPTH) % CHUNK_WIDTH == 0 || blockIndexZ != 0) ? &chunk->blocks[blockIndex - CHUNK_WIDTH] : NULL;
-	curBlock->neighbors.behind = ((blockIndex+CHUNK_DEPTH) % CHUNK_WIDTH == 0 || blockIndexZ != 0) ? &chunk->blocks[blockIndex + CHUNK_DEPTH] : NULL;
+	curBlock->neighbors.left =   (blockIndexX != 0) ? &chunk->blocks[blockIndexY][blockIndexZ][blockIndexX-1] : NULL;
+	curBlock->neighbors.right =  (blockIndexX != CHUNK_WIDTH-1) ? &chunk->blocks[blockIndexY][blockIndexZ][blockIndexX+1] : NULL;
+	curBlock->neighbors.above =  (blockIndexY != CHUNK_HEIGHT-1) ? &chunk->blocks[blockIndexY+1][blockIndexZ][blockIndexX] : NULL;
+	curBlock->neighbors.below =  (blockIndexY != 0) ? &chunk->blocks[blockIndexY-1][blockIndexZ][blockIndexX] : NULL;
+	curBlock->neighbors.front =  (blockIndexZ != 0) ? &chunk->blocks[blockIndexY][blockIndexZ-1][blockIndexX] : NULL;
+	curBlock->neighbors.behind = (blockIndexZ != CHUNK_DEPTH-1) ? &chunk->blocks[blockIndexY][blockIndexZ+1][blockIndexX] : NULL;
+}
+
+void SetChunkInnerBlocksInvisible(struct Chunk* chunk)
+{
+	for (int z = 0; z < CHUNK_DEPTH; ++z)
+		for (int y = 0; y < CHUNK_HEIGHT; ++y)
+			for (int x = 0; x < CHUNK_WIDTH; ++x)
+			{
+				// If it has neighbors in all direction, then it is inside
+				struct Block* cur = &chunk->blocks[CHUNK_INDEX(x,y,z)];
+				if (
+					cur->neighbors.above  &&
+					cur->neighbors.below  &&
+					cur->neighbors.left   &&
+					cur->neighbors.right  &&
+					cur->neighbors.front  &&
+					cur->neighbors.behind 
+				   )
+					chunk->blocks[CHUNK_INDEX(x,y,z)].props.isVisible = false;
+				else 
+					chunk->blocks[CHUNK_INDEX(x,y,z)].props.isVisible = true;
+			}
 }

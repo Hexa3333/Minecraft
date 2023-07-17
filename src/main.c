@@ -17,14 +17,14 @@ int main(void)
 	
 	struct Shader shadethis = CreateShaderVF("res/Shaders/BasicCubeV.glsl", "res/Shaders/BasicCubeF.glsl");
 	struct AmbientLight ambientLight = CreateAmbientLight((vec3s){1.0f, 1.0f, 1.0f}, 1.0f);
-	struct DirectionalLight directionalLight = CreateDirectionalLight((vec3s){1.0f,1.0f,1.0f}, 1.0f, (vec3s) { -0.8f, 0.2f, 0.0f });
+	struct DirectionalLight directionalLight = CreateDirectionalLight((vec3s){1.0f,1.0f,1.0f}, 1.0f, (vec3s) { -0.3f, 0.2f, 0.0f });
 
-	struct Chunk testChunk = CreateChunk(0,0);
-	
-	printf("testBlock.left = (%.1f, %.1f)\n", testChunk.blocks[CHUNK_INDEXER(1,1)].neighbors.left->position.x, testChunk.blocks[CHUNK_INDEXER(1,1)].neighbors.left->position.z);
-	printf("testBlock.right = (%.1f, %.1f)\n", testChunk.blocks[CHUNK_INDEXER(1,1)].neighbors.right->position.x, testChunk.blocks[CHUNK_INDEXER(1,1)].neighbors.right->position.z);
-	printf("testBlock.front = (%.1f, %.1f)\n", testChunk.blocks[CHUNK_INDEXER(1,1)].neighbors.front->position.x, testChunk.blocks[CHUNK_INDEXER(1,1)].neighbors.front->position.z);
-	printf("testBlock.behind = (%.1f, %.1f)\n", testChunk.blocks[CHUNK_INDEXER(1,1)].neighbors.behind->position.x, testChunk.blocks[CHUNK_INDEXER(1,1)].neighbors.behind->position.z);
+	struct Chunk heyya[4];
+	for (int i = 0; i < 2; i++)
+		for (int j = 0; j < 2; j++)
+		{
+			heyya[i*2 + j] = CreateChunk(i*CHUNK_WIDTH,j*CHUNK_DEPTH);
+		}
 
 	glBindTexture(GL_TEXTURE_2D, g_SPRITE_SHEET.sheet.texObj);
 	while (GetGameShouldRun())
@@ -43,7 +43,11 @@ int main(void)
 
 		SendAmbientLight(&g_TerrainShader, ambientLight);
 		SendDirectionalLight(&g_TerrainShader, directionalLight);
-		DrawChunk(&testChunk);
+		for (int i = 0; i < 2; i++)
+			for (int j = 0; j < 2; j++)
+		{
+			DrawChunk(&heyya[i*2 + j]);
+		}
 
 		if (glfwGetKey(g_MainWindow.object, GLFW_KEY_ESCAPE)) break;
 

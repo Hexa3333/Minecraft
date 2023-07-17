@@ -14,6 +14,11 @@ struct Block
 	mat4s model;
 	void (*render)(struct Buffer* buffer);
 
+	struct {
+		bool isVisible;
+		bool isTransparent;
+	} props;
+	
 	struct
 	{
 		struct Block* above;

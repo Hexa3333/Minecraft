@@ -6,6 +6,7 @@
 #include <cglm/struct.h>
 
 void CreateLine(float* out, vec3s start, vec3s end, vec3s color);
-void GetNeighboringBlocks(struct Chunk* chunk, u16 blockIndex);
+void SetNeighboringBlocks(struct Chunk* chunk, u8 blockIndexX, u8 blockIndexY, u8 blockIndexZ);
+void SetChunkInnerBlocksInvisible(struct Chunk* chunk);
 
 #endif // UTIL_H

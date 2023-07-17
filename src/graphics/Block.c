@@ -97,6 +97,7 @@ struct Block CreateBlock(struct Shader* shader, enum BLOCK_TEX_NAMES texName, ve
 	ret.render = DetermineDrawFunc(DetermineBufferType(&ret.buffer));
 	ret.model = GLMS_MAT4_IDENTITY;
 	ret.position = position;
+	ret.props.isTransparent = false;
 	memset(&ret.neighbors, 0, 6*sizeof(struct Block*));
 
 	return ret;
