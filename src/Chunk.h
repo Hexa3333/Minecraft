@@ -11,7 +11,7 @@
 #define CHUNK_TOTAL_BLOCKS CHUNK_WIDTH*CHUNK_HEIGHT*CHUNK_DEPTH
 #define CHUNK_INDEX(x,y,z) y][z][x
 
-#define RENDER_DISTANCE 4 * 4
+#define MAX_VISIBLE_CHUNKS 2 * 2
 
 struct Chunk
 {
@@ -21,5 +21,11 @@ struct Chunk
 
 struct Chunk CreateChunk(u32 x, u32 z);
 void DrawChunk(struct Chunk* chunk);
+
+extern struct _ChunkMap
+{
+	struct Chunk chunks[MAX_VISIBLE_CHUNKS];
+} g_ChunkMap;
+
 
 #endif // CHUNK_H

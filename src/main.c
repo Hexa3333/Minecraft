@@ -19,20 +19,19 @@ int main(void)
 	struct AmbientLight ambientLight = CreateAmbientLight((vec3s){1.0f, 1.0f, 1.0f}, 1.0f);
 	struct DirectionalLight directionalLight = CreateDirectionalLight((vec3s){1.0f,1.0f,1.0f}, 1.0f, (vec3s) { -0.3f, 0.2f, 0.0f });
 
-	struct Chunk heyya[4];
-	for (int i = 0; i < 2; i++)
-		for (int j = 0; j < 2; j++)
+	struct Chunk heyya[1];
+	for (int i = 0; i < 1; i++)
+		for (int j = 0; j < 1; j++)
 		{
-			heyya[i*2 + j] = CreateChunk(i*CHUNK_WIDTH,j*CHUNK_DEPTH);
+			heyya[i*1 + j] = CreateChunk(i*CHUNK_WIDTH,j*CHUNK_DEPTH);
 		}
-
 	glBindTexture(GL_TEXTURE_2D, g_SPRITE_SHEET.sheet.texObj);
 	while (GetGameShouldRun())
 	{
 		CalculateDT();
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		//glClearColor(0.0f, 1.0, 0.0f, 1.0f);
-		//printf("\033[H\033[J"); // Clear
+		printf("\033[H\033[J"); // Clear
 
 		UpdateView();
 		KeyInput();
@@ -41,12 +40,14 @@ int main(void)
 		float pY = g_MainCamera.position.y;
 		float pZ = g_MainCamera.position.z;
 
+		printf("Camera = (%.1f,%.1f,%.1f)\n", pX, pY, pZ);
+
 		SendAmbientLight(&g_TerrainShader, ambientLight);
 		SendDirectionalLight(&g_TerrainShader, directionalLight);
-		for (int i = 0; i < 2; i++)
-			for (int j = 0; j < 2; j++)
+		for (int i = 0; i < 1; i++)
+			for (int j = 0; j < 1; j++)
 		{
-			DrawChunk(&heyya[i*2 + j]);
+			DrawChunk(&heyya[i*1 + j]);
 		}
 
 		if (glfwGetKey(g_MainWindow.object, GLFW_KEY_ESCAPE)) break;

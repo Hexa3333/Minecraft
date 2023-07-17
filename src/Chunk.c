@@ -27,6 +27,7 @@ struct Chunk CreateChunk(u32 x, u32 z)
 
 void DrawChunk(struct Chunk* chunk)
 {
+	CullUnseenBlocks(chunk);
 	for (int z = 0; z < CHUNK_DEPTH; ++z)
 		for (int y = 0; y < CHUNK_HEIGHT; ++y)
 			for (int x = 0; x < CHUNK_WIDTH; ++x)
