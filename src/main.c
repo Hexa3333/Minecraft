@@ -30,7 +30,7 @@ int main(void)
 	{
 		CalculateDT();
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		//glClearColor(0.0f, 1.0, 0.0f, 1.0f);
+		glClearColor(0.529f, 0.807f, 0.921f, 1.0f);
 		printf("\033[H\033[J"); // Clear
 
 		UpdateView();
