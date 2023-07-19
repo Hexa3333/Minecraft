@@ -12,6 +12,17 @@ void CreateLine(float* out, vec3s start, vec3s end, vec3s color)
 	memcpy(out, data, sizeof(data));
 }
 
+float* GetSpriteXYFromSheet(u8 tileIndexX, u8 tileIndexY)
+{
+	float x = g_SPRITE_SHEET.tileWidth * (tileIndexX-1);
+	float y = g_SPRITE_SHEET.sheet.height - (g_SPRITE_SHEET.tileHeight * tileIndexY); // y is flipped
+	float* ret = malloc(2 * sizeof(float));
+	ret[0] = x;
+	ret[1] = y;
+
+	return ret;
+}
+
 void SetNeighboringBlocks(struct Chunk* chunk, u8 blockIndexX, u8 blockIndexY, u8 blockIndexZ)
 {
 	struct Block* curBlock = &chunk->blocks[blockIndexY][blockIndexZ][blockIndexX];
