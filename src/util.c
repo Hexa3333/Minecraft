@@ -43,6 +43,14 @@ void SetNeighboringBlocks(struct Chunk* chunk, u8 blockIndexX, u8 blockIndexY, u
 	
 }
 
+void SetNeighboringBlocksOfChunk(struct Chunk* chunk)
+{
+	for (int y = 0; y < CHUNK_HEIGHT; ++y)
+		for (int z = 0; z < CHUNK_DEPTH; ++z)
+			for (int x = 0; x < CHUNK_WIDTH; ++x)
+				SetNeighboringBlocks(chunk, x, y, z);
+}
+
 void SetChunkInnerBlocksInvisible(struct Chunk* chunk)
 {
 	for (int z = 0; z < CHUNK_DEPTH; ++z)

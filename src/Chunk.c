@@ -18,10 +18,9 @@ struct Chunk* CreateChunk(u32 x, u32 z)
 		ret->blocks[CHUNK_INDEX(x,y,z)].position = (vec3s){ret->position.x + x, ret->position.y + y, ret->position.z + z};
 		ret->blocks[CHUNK_INDEX(x,y,z)] = CreateBlock(&g_TerrainShader, DIRTWGRASS, ret->blocks[y][z][x].position);
 		ret->blocks[CHUNK_INDEX(x,y,z)].model = glms_translate(GLMS_MAT4_IDENTITY, ret->blocks[y][z][x].position);
-		
-		SetNeighboringBlocks(ret, x,y,z);
 	}
 
+	SetNeighboringBlocksOfChunk(ret);
 	SetChunkInnerBlocksInvisible(ret);
 	return ret;
 }

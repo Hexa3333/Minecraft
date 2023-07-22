@@ -37,7 +37,6 @@ bool InitGame(const char* Title, u16 width, u16 height)
 	// Component Setup
 	ShaderSetup();
 	SpriteSetup();
-	ChunkMapSetup();
 	SunSet(.7f);
 	BuildSpriteSheet("res/Sprites/blocks.png", 0, 5, 5);
 	
