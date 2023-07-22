@@ -46,10 +46,10 @@ void GetBlockTexture(float* arr, enum BLOCK_TEX_NAMES texName)
 	static float BlockTextureIndexes[5][6] =
 	{
 		// TOP - AROUND- BOTTOM
+		{ 0,0, 0,0, 0,0 },  // AIR
+		{ 5,2, 5,2, 5,2 },	// ROCK
 		{ 4,4, 3,4, 5,4 },  // DIRTWGRASS
 		{ 5,4, 5,4, 5,4 },  // DIRT
-		{ 2,3, 3,3, 2,3 },	// TREE
-		{ 5,2, 5,2, 5,2 },	// ROCK
 		{ 3,5, 3,5, 3,5 }	// SAND
 	};
 
