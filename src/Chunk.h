@@ -20,23 +20,9 @@ struct Chunk
 {
 	vec3s position;
 	struct Block blocks[CHUNK_HEIGHT][CHUNK_DEPTH][CHUNK_WIDTH];
-	u64 id;
 };
 
-struct Chunk CreateChunk(u32 x, u32 z);
+struct Chunk* CreateChunk(u32 x, u32 z);
 void DrawChunk(struct Chunk* chunk);
-
-
-extern struct _ChunkMap
-{
-	struct Chunk chunks[MAX_VISIBLE_CHUNKS];
-
-	struct {
-		u64 availables[MAX_VISIBLE_CHUNKS];
-		u8 numOfAvailables;
-	} list;
-} g_ChunkMap;
-
-void ChunkMapSetup();
 
 #endif // CHUNK_H

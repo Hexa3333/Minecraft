@@ -2,7 +2,7 @@
 #define GAME_H
 
 #include "common.h"
-#include <glad/glad.h>
+#include <glad.h>
 #include <GLFW/glfw3.h>
 #include "graphics/Sprite.h"
 #include <cglm/struct.h>

@@ -1,8 +1,8 @@
 #include "Camera.h"
 
 struct Camera g_MainCamera;
-static vec3s _up = (vec3s) { 0.0f, 1.0f, 0.0f };
-static vec3s _towards_monitor = (vec3s) { 0.0f, 0.0f, -1.0f};
+static vec3s _up = { 0.0f, 1.0f, 0.0f };
+static vec3s _towards_monitor = { 0.0f, 0.0f, -1.0f};
 
 mat4s g_View;
 mat4s g_Projection;

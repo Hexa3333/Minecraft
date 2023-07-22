@@ -1,5 +1,5 @@
 #include "Buffer.h"
-#include <glad/glad.h>
+#include <glad.h>
 #include <stdbool.h>
 
 struct Buffer CreateBufferVA(float* data, u32 sizeOfData)
@@ -311,6 +311,10 @@ void* DetermineDrawFunc(enum BufferType bt)
 		case VTNA:
 			return &DrawBufferA;
 		case VCA:
+			return &DrawBufferA;
+
+
+		default:
 			return &DrawBufferA;
 	}
 }

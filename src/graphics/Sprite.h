@@ -1,7 +1,7 @@
 #ifndef SPRITE_H
 #define SPRITE_H
 
-#include <glad/glad.h>
+#include <glad.h>
 #include "../common.h"
 
 struct Sprite

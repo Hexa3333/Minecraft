@@ -13,7 +13,7 @@ void ShaderSetup()
 
 struct Shader CreateShaderVF(const char* vshPath, const char* fshPath)
 {
-	struct Shader ret = {0};
+	struct Shader ret = { 0 };
 	FILE* vertexFp = fopen(vshPath, "r");
 	FILE* fragmentFp = fopen(fshPath, "r");
 
@@ -26,25 +26,22 @@ struct Shader CreateShaderVF(const char* vshPath, const char* fshPath)
 	fseek(vertexFp, 0, SEEK_END);
 	size_t vertexSourceLength = ftell(vertexFp);
 	rewind(vertexFp);
-	
+
 	fseek(fragmentFp, 0, SEEK_END);
 	size_t fragmentSourceLength = ftell(fragmentFp);
 	rewind(fragmentFp);
 
-	char* vertexSource = malloc(vertexSourceLength + 1);
-	char* fragmentSource = malloc(fragmentSourceLength + 1);
+	char* vertexSource = malloc(vertexSourceLength);
+	char* fragmentSource = malloc(fragmentSourceLength);
 
-	fread(vertexSource, 1, vertexSourceLength, vertexFp);
-	vertexSource[vertexSourceLength] = '\0';
-
-	fread(fragmentSource, 1, fragmentSourceLength, fragmentFp);
-	fragmentSource[fragmentSourceLength] = '\0';
+	vertexSourceLength = fread(vertexSource, 1, vertexSourceLength, vertexFp);
+	fragmentSourceLength = fread(fragmentSource, 1, fragmentSourceLength, fragmentFp);
 
 	GLuint vertexShader = glCreateShader(GL_VERTEX_SHADER);
 	GLuint fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
 
-	glShaderSource(vertexShader, 1, (const char**)&vertexSource, NULL);
-	glShaderSource(fragmentShader, 1, (const char**)&fragmentSource, NULL);
+	glShaderSource(vertexShader, 1, (const char**)&vertexSource, (const GLint*)&vertexSourceLength);
+	glShaderSource(fragmentShader, 1, (const char**)&fragmentSource, (const GLint*)&fragmentSourceLength);
 
 	glCompileShader(vertexShader);
 	{

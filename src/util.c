@@ -14,19 +14,26 @@ void CreateLine(float* out, vec3s start, vec3s end, vec3s color)
 
 float* GetSpriteXYFromSheet(u8 tileIndexX, u8 tileIndexY)
 {
-	float x = g_SPRITE_SHEET.tileWidth * (tileIndexX-1);
+	float x = g_SPRITE_SHEET.tileWidth * (tileIndexX - 1);
 	float y = g_SPRITE_SHEET.sheet.height - (g_SPRITE_SHEET.tileHeight * tileIndexY); // y is flipped
 	float* ret = malloc(2 * sizeof(float));
-	ret[0] = x;
-	ret[1] = y;
-
-	return ret;
+	if (ret)
+	{
+		ret[0] = x;
+		ret[1] = y;
+		return ret;
+	}
+	else
+	{
+		ERR("Malloc failed at: %i", __LINE__);
+		return NULL;
+	}
 }
 
 void SetNeighboringBlocks(struct Chunk* chunk, u8 blockIndexX, u8 blockIndexY, u8 blockIndexZ)
 {
 	struct Block* curBlock = &chunk->blocks[blockIndexY][blockIndexZ][blockIndexX];
-	
+
 	curBlock->neighbors.left =   (blockIndexX != 0) ? &chunk->blocks[blockIndexY][blockIndexZ][blockIndexX-1] : NULL;
 	curBlock->neighbors.right =  (blockIndexX != CHUNK_WIDTH-1) ? &chunk->blocks[blockIndexY][blockIndexZ][blockIndexX+1] : NULL;
 	curBlock->neighbors.above =  (blockIndexY != CHUNK_HEIGHT-1) ? &chunk->blocks[blockIndexY+1][blockIndexZ][blockIndexX] : NULL;
@@ -45,14 +52,14 @@ void SetChunkInnerBlocksInvisible(struct Chunk* chunk)
 				// If it has neighbors in all direction, then it is inside
 				struct Block* cur = &chunk->blocks[CHUNK_INDEX(x,y,z)];
 				if (
-					cur->neighbors.above  &&
-					cur->neighbors.below  &&
-					cur->neighbors.left   &&
-					cur->neighbors.right  &&
-					cur->neighbors.front  &&
-					cur->neighbors.behind 
-				   )
-					chunk->blocks[CHUNK_INDEX(x,y,z)].props.isVisible = false;
+					cur->neighbors.above &&
+					cur->neighbors.below &&
+					cur->neighbors.left &&
+					cur->neighbors.right &&
+					cur->neighbors.front &&
+					cur->neighbors.behind
+					)
+					chunk->blocks[CHUNK_INDEX(x, y, z)].props.isVisible = false;
 				else 
 					chunk->blocks[CHUNK_INDEX(x,y,z)].props.isVisible = true;
 			}

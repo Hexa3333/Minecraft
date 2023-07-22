@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <glad/glad.h>
+#include <glad.h>
 #include <GLFW/glfw3.h>
 
 #include "common.h"
@@ -16,9 +16,7 @@ static void KeyInput();
 int main(void)
 {
 	InitGame("Minecraft", 720, 720);
-	
-	struct Shader shadethis = CreateShaderVF("res/Shaders/BasicCubeV.glsl", "res/Shaders/BasicCubeF.glsl");
-	struct Chunk* heyya = malloc(3*3 * sizeof(struct Chunk));
+	struct Chunk* heyya[3*3];
 	for (int i = 0; i < 3; i++)
 		for (int j = 0; j < 3; j++)
 		{
@@ -31,7 +29,6 @@ int main(void)
 		CalculateDT();
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		glClearColor(0.529f, 0.807f, 0.921f, 1.0f);
-		printf("\033[H\033[J"); // Clear
 
 		UpdateView();
 		KeyInput();
@@ -40,15 +37,12 @@ int main(void)
 		float pY = g_MainCamera.position.y;
 		float pZ = g_MainCamera.position.z;
 
-		printf("Camera = (%.1f,%.1f,%.1f)\n", pX, pY, pZ);
-		printf("FPS = %.1f\n", 1/DT);
-
 		SunSet(sunMod);
 		SendSun(&g_TerrainShader);
 		for (int i = 0; i < 3; i++)
 			for (int j = 0; j < 3; j++)
 		{
-			DrawChunk(&heyya[i*3 + j]);
+			DrawChunk(heyya[i*3 + j]);
 		}
 
 		if (glfwGetKey(g_MainWindow.object, GLFW_KEY_ESCAPE)) break;
@@ -56,7 +50,6 @@ int main(void)
 		glfwSwapBuffers(g_MainWindow.object);
 		glfwPollEvents();
 	}
-	free(heyya);
 
 	KillGame();
 }
