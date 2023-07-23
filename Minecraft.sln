@@ -4,9 +4,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 17.6.33829.357
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Minecraft", "Minecraft.vcxproj", "{1BFDF053-8292-4DF7-BB96-BD03DD9984A0}"
-	ProjectSection(ProjectDependencies) = postProject
-		{CA8BCAF9-CD25-4133-8F62-3D1449B5D2FC} = {CA8BCAF9-CD25-4133-8F62-3D1449B5D2FC}
-	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "cglm", "cglm\win\cglm.vcxproj", "{CA8BCAF9-CD25-4133-8F62-3D1449B5D2FC}"
 EndProject

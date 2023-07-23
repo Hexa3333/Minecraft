@@ -19,6 +19,7 @@ int main(void)
 	InitGame("Minecraft", 720, 720);
 	struct Shader blockShader = CreateShaderVF("res/Shaders/ChunkV.glsl", "res/Shaders/ChunkF.glsl");
 
+	// PLEASE
 	vec3s offsets[16*16*16];
 	for (int y = 0; y < 16; ++y)
 		for (int z = 0; z < 16; ++z)
