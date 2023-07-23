@@ -211,7 +211,7 @@ struct Buffer_Instanced CreateBufferVTNA_Instanced(float* data, u32 sizeOfData, 
 	ret.root.sizeOfData = sizeOfData;
 	ret.root.indices = NULL;
 	ret.root.sizeOfIndices = 0;
-	ret.root.stride = 11 * sizeof(float);
+	ret.root.stride = 8 * sizeof(float);
 	ret.instanceCount = nOffsets;
 
 	glGenVertexArrays(1, &ret.root.VAO);
@@ -237,7 +237,7 @@ struct Buffer_Instanced CreateBufferVTNA_Instanced(float* data, u32 sizeOfData, 
 
 	glBufferData(GL_ARRAY_BUFFER, nOffsets * sizeof(vec3s), offsets, GL_STATIC_DRAW);
 
-	glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, ret.root.stride, (void*)(8 * sizeof(float)));
+	glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, sizeof(vec3s), (void*)0);
 	glEnableVertexAttribArray(3);
 	
 	glVertexAttribDivisor(3, 1);
@@ -303,7 +303,11 @@ void DrawBufferA(struct Buffer* buffer)
 
 void DrawBufferE_Instanced(struct Buffer_Instanced* buffer)
 {
+	glBindVertexArray(buffer->root.VAO);
+	glBindBuffer(GL_ARRAY_BUFFER, buffer->root.VBO);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, buffer->root.EBO);
 
+	glDrawElementsInstanced(GL_TRIANGLES, buffer->root.sizeOfIndices, GL_UNSIGNED_INT, 0, buffer->instanceCount);
 }
 void DrawBufferA_Instanced(struct Buffer_Instanced* buffer)
 {

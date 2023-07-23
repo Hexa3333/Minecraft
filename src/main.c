@@ -19,17 +19,7 @@ int main(void)
 	InitGame("Minecraft", 720, 720);
 	struct Shader blockShader = CreateShaderVF("res/Shaders/ChunkV.glsl", "res/Shaders/ChunkF.glsl");
 
-	// PLEASE
-	vec3s offsets[16*16*16];
-	for (int y = 0; y < 16; ++y)
-		for (int z = 0; z < 16; ++z)
-			for (int x = 0; x < 16; ++x)
-			{
-				vec3s* offset = &offsets[x + 16 * (y + 16 * z)];
-				offset->x = x;
-				offset->y = y;
-				offset->z = z;
-			}
+	vec3s* offsets = GetChunkOffsets();
 
 	struct Block block = CreateChunk(&blockShader, BLOCK_STONE, (vec3s) { 0, 0, 0 }, offsets, 16*16*16);
 
@@ -51,11 +41,7 @@ int main(void)
 		SunSet(sunMod);
 		SendSun(&blockShader);
 
-		SendUniformMat4(block.shader, "model", &block.model);
-		SendUniformMat4(block.shader, "view", &g_View);
-		SendUniformMat4(block.shader, "projection", &g_Projection);
-		UseShader(&blockShader);
-		DrawBufferA(&block.buffer);
+		DrawChunk(&block);
 
 		if (glfwGetKey(g_MainWindow.object, GLFW_KEY_ESCAPE)) break;
 

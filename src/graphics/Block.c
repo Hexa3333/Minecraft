@@ -168,5 +168,14 @@ void DrawBlock(struct Block* go)
 	SendUniformMat4(go->shader, "view", &g_View); 
 	SendUniformMat4(go->shader, "projection", &g_Projection); 
 	UseShader(go->shader);
-	DrawBufferA_Instanced(&go->buffer);
+	DrawBufferA(&go->buffer);
+}
+
+void DrawChunk(struct Block* chunk)
+{
+	SendUniformMat4(chunk->shader, "model", &chunk->model);
+	SendUniformMat4(chunk->shader, "view", &g_View);
+	SendUniformMat4(chunk->shader, "projection", &g_Projection);
+	UseShader(chunk->shader);
+	DrawBufferA_Instanced(&chunk->buffer);
 }

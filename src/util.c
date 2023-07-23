@@ -14,6 +14,22 @@ void CreateLine(float* out, vec3s start, vec3s end, vec3s color)
 	memcpy(out, data, sizeof(data));
 }
 
+vec3s* GetChunkOffsets()
+{
+	vec3s* ret = malloc(CHUNK_WIDTH * CHUNK_HEIGHT * CHUNK_DEPTH * sizeof(vec3s));
+	for (int y = 0; y < 16; ++y)
+		for (int z = 0; z < 16; ++z)
+			for (int x = 0; x < 16; ++x)
+			{
+				vec3s* offset = &ret[x + 16 * (y + 16 * z)];
+				offset->x = x;
+				offset->y = y;
+				offset->z = z;
+			}
+
+	return ret;
+}
+
 float* GetSpriteXYFromSheet(u8 tileIndexX, u8 tileIndexY)
 {
 	float x = g_SPRITE_SHEET.tileWidth * (tileIndexX - 1);
