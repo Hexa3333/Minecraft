@@ -102,4 +102,14 @@
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="res\Shaders\ChunkV.glsl" />
+    <None Include="res\Shaders\ChunkF.glsl" />
+    <None Include="res\Shaders\BasicCubeF.glsl" />
+    <None Include="res\Shaders\BasicCubeV.glsl" />
+    <None Include="res\Shaders\HudF.glsl" />
+    <None Include="res\Shaders\HudV.glsl" />
+    <None Include="res\Shaders\LineF.glsl" />
+    <None Include="res\Shaders\LineV.glsl" />
+  </ItemGroup>
 </Project>

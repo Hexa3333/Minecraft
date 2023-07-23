@@ -129,8 +129,39 @@ struct Buffer CreateBufferVTE(float* data, u32 sizeOfData,
 
 }
 
+struct Buffer CreateBufferVTA(float* data, u32 sizeOfData)
+{
+	struct Buffer ret;
+	ret.data = data;
+	ret.sizeOfData = sizeOfData;
+	ret.indices = NULL;
+	ret.sizeOfIndices = 0;
+	ret.stride = 5 * sizeof(float);
 
-struct Buffer CreateBufferVTN(float* data, u32 sizeOfData, u32* indices, u32 sizeOfIndices)
+	glGenVertexArrays(1, &ret.VAO);
+	glGenBuffers(1, &ret.VBO);
+
+	glBindVertexArray(ret.VAO);
+	glBindBuffer(GL_ARRAY_BUFFER, ret.VBO);
+
+	glBufferData(GL_ARRAY_BUFFER, sizeOfData, data, GL_STATIC_DRAW);
+
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, ret.stride, (void*)0);
+	glEnableVertexAttribArray(0);
+
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, ret.stride, (void*)(3 * sizeof(float)));
+	glEnableVertexAttribArray(1);
+
+#ifdef MC_DEBUG
+	glBindVertexArray(0);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+#endif
+
+	return ret;
+
+}
+
+struct Buffer CreateBufferVTNE(float* data, u32 sizeOfData, u32* indices, u32 sizeOfIndices)
 {
 	struct Buffer ret;
 	ret.data = data;
@@ -204,29 +235,40 @@ struct Buffer CreateBufferVTNA(float* data, u32 sizeOfData)
 
 }
 
-struct Buffer CreateBufferVTA(float* data, u32 sizeOfData)
+struct Buffer_Instanced CreateBufferVTNIA3D(float* data, u32 sizeOfData, vec3s* translationData, u32 translationNsize)
 {
+	struct Buffer_Instanced ret;
+	ret.root.data = data;
+	ret.root.sizeOfData = sizeOfData;
+	ret.root.indices = NULL;
+	ret.root.sizeOfIndices = 0;
+	ret.root.stride = 8 * sizeof(float);
+	ret.instanceCount = translationNsize;
 
-	struct Buffer ret;
-	ret.data = data;
-	ret.sizeOfData = sizeOfData;
-	ret.indices = NULL;
-	ret.sizeOfIndices = 0;
-	ret.stride = 5 * sizeof(float);
+	glGenVertexArrays(1, &ret.root.VAO);
+	glGenBuffers(1, &ret.root.VBO);
 
-	glGenVertexArrays(1, &ret.VAO);
-	glGenBuffers(1, &ret.VBO);
-
-	glBindVertexArray(ret.VAO);
-	glBindBuffer(GL_ARRAY_BUFFER, ret.VBO);
+	glBindVertexArray(ret.root.VAO);
+	glBindBuffer(GL_ARRAY_BUFFER, ret.root.VBO);
 
 	glBufferData(GL_ARRAY_BUFFER, sizeOfData, data, GL_STATIC_DRAW);
 
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, ret.stride, (void*)0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, ret.root.stride, (void*)0);
 	glEnableVertexAttribArray(0);
 
-	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, ret.stride, (void*)(3 * sizeof(float)));
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, ret.root.stride, (void*)(3 * sizeof(float)));
 	glEnableVertexAttribArray(1);
+
+	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, ret.root.stride, (void*)(5 * sizeof(float)));
+	glEnableVertexAttribArray(2);
+
+	// Instance
+	glBindBuffer(GL_ARRAY_BUFFER, ret.InstanceVBO);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(vec3s) * ret.instanceCount, translationData, GL_STATIC_DRAW);
+
+	glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, ret.root.stride, (void*)(8 * sizeof(float)));
+	glVertexAttribDivisor(3, 1);
+
 
 #ifdef MC_DEBUG
 	glBindVertexArray(0);
@@ -234,7 +276,6 @@ struct Buffer CreateBufferVTA(float* data, u32 sizeOfData)
 #endif
 
 	return ret;
-
 }
 
 void DrawBufferE(struct Buffer* buffer)
@@ -252,6 +293,23 @@ void DrawBufferA(struct Buffer* buffer)
 	glBindBuffer(GL_ARRAY_BUFFER, buffer->VBO);
 
 	glDrawArrays(GL_TRIANGLES, 0, buffer->sizeOfData);
+}
+
+void DrawBufferE_Instanced(struct Buffer_Instanced* buffer)
+{
+	glBindVertexArray(buffer->root.VAO);
+	glBindBuffer(GL_ARRAY_BUFFER, buffer->root.VBO);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, buffer->root.EBO);
+
+	glDrawElementsInstanced(GL_TRIANGLES, buffer->root.sizeOfIndices, GL_UNSIGNED_INT, 0, buffer->instanceCount);
+}
+
+void DrawBufferA_Instanced(struct Buffer_Instanced* buffer)
+{
+	glBindVertexArray(buffer->root.VAO);
+	glBindBuffer(GL_ARRAY_BUFFER, buffer->root.VBO);
+
+	glDrawArraysInstanced(GL_TRIANGLES, 0, buffer->root.sizeOfData, buffer->instanceCount);
 }
 
 void DrawBufferLine(struct Buffer* buffer)

@@ -17,11 +17,6 @@ int main(void)
 {
 	InitGame("Minecraft", 720, 720);
 	struct Chunk* heyya = CreateChunk(0, 0);
-	
-	for (int y = 0; y < (CHUNK_HEIGHT/2); y++)
-		for (int x = 0; x < CHUNK_WIDTH; x++)
-			for (int z = 0; z < CHUNK_DEPTH; z++)
-				ChunkRemoveBlockAt(heyya, x, y, z);
 
 	glBindTexture(GL_TEXTURE_2D, g_SPRITE_SHEET.sheet.texObj);
 	while (GetGameShouldRun())

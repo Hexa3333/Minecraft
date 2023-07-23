@@ -15,6 +15,13 @@ struct Buffer
 	u8 stride;
 };
 
+struct Buffer_Instanced
+{
+	struct Buffer root;
+	GLuint InstanceVBO;
+	u32 instanceCount;
+};
+
 enum BufferType
 {
 	V, VC, VT, VTN,
@@ -23,8 +30,8 @@ enum BufferType
 };
 
 // Vertex
-struct Buffer CreateBufferVA(float* data, u32 sizeOfData);
 struct Buffer CreateBufferVE(float* data, u32 sizeOfData, u32* indices, u32 sizeOfIndices);
+struct Buffer CreateBufferVA(float* data, u32 sizeOfData);
 
 struct Buffer CreateBufferVCA(float* data, u32 sizeOfData);
 // Vertex-Texture
@@ -32,8 +39,12 @@ struct Buffer CreateBufferVTE(float* data, u32 sizeOfData, u32* indices, u32 siz
 struct Buffer CreateBufferVTA(float* data, u32 sizeOfData);
 
 // Vertex-Texture-Normals
+struct Buffer CreateBufferVTNE(float* data, u32 sizeOfData);
 struct Buffer CreateBufferVTNA(float* data, u32 sizeOfData);
-struct Buffer CreateBufferTEST(float* data, u32 sizeOfData);
+
+// Vertex-Texture-Normals (Instanced)
+struct Buffer_Instanced CreateBufferVTNIE3D(float* data, u32 sizeOfData, u32* indices, u32 sizeOfIndices, vec3s* translation, u32 translationNsize);
+struct Buffer_Instanced CreateBufferVTNIA3D(float* data, u32 sizeOfData, vec3s* translation, u32 translationNsize);
 
 void DrawBufferE(struct Buffer* buffer);
 void DrawBufferA(struct Buffer* buffer);

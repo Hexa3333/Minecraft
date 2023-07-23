@@ -42,8 +42,8 @@ enum BLOCK_TYPE
 
 struct Block CreateGameObject(struct Buffer* buffer, struct Shader* shader);
 struct Block CreateGameObjectSpex(struct Buffer* buffer, struct Shader* shader, void* func);
-struct Block CreateBlock(struct Shader* shader, enum BLOCK_TYPE texName, vec3s position);
-void DrawGameObject(struct Block* go);
+struct Block CreateBlock(struct Shader* shader, enum BLOCK_TYPE blockType, vec3s position);
+void DrawBlock(struct Block* go);
 void DestroyGameObject(struct Block* go);
 
 #endif // GAMEOBJECT_H

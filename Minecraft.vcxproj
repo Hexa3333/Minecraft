@@ -157,6 +157,16 @@
     <ClInclude Include="src\Time.h" />
     <ClInclude Include="src\util.h" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="res\Shaders\BasicCubeF.glsl" />
+    <None Include="res\Shaders\BasicCubeV.glsl" />
+    <None Include="res\Shaders\ChunkF.glsl" />
+    <None Include="res\Shaders\ChunkV.glsl" />
+    <None Include="res\Shaders\HudF.glsl" />
+    <None Include="res\Shaders\HudV.glsl" />
+    <None Include="res\Shaders\LineF.glsl" />
+    <None Include="res\Shaders\LineV.glsl" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

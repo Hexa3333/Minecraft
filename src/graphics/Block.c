@@ -105,7 +105,7 @@ struct Block CreateBlock(struct Shader* shader, enum BLOCK_TYPE blockType, vec3s
 }
 
 
-void DrawGameObject(struct Block* go)
+void DrawBlock(struct Block* go)
 {
 #ifdef NO_SPRITE_SHEET
 	UseSprite(&go->sprite);
