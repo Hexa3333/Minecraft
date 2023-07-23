@@ -18,7 +18,11 @@ struct Buffer
 struct Buffer_Instanced
 {
 	struct Buffer root;
+<<<<<<< HEAD
 	GLuint instanceVBO;
+=======
+	GLuint InstanceVBO;
+>>>>>>> 56d983d5a5ed537427fb4113f2f21bae3832b784
 	u32 instanceCount;
 };
 
@@ -39,12 +43,20 @@ struct Buffer CreateBufferVTE(float* data, u32 sizeOfData, u32* indices, u32 siz
 struct Buffer CreateBufferVTA(float* data, u32 sizeOfData);
 
 // Vertex-Texture-Normals
+struct Buffer CreateBufferVTNE(float* data, u32 sizeOfData);
 struct Buffer CreateBufferVTNA(float* data, u32 sizeOfData);
+<<<<<<< HEAD
 struct Buffer CreateBufferVTNA(float* data, u32 sizeOfData);
 
 // Vertex-Texture-Normals (Instanced)
 struct Buffer_Instanced CreateBufferVTNE_Instanced(float* data, u32 sizeOfData, u32* indices, u32 sizeOfIndices, vec3s* offsets, u32 nOffsets);
 struct Buffer_Instanced CreateBufferVTNA_Instanced(float* data, u32 sizeOfData, vec3s* offsets, u32 nOffsets);
+=======
+
+// Vertex-Texture-Normals (Instanced)
+struct Buffer_Instanced CreateBufferVTNIE3D(float* data, u32 sizeOfData, u32* indices, u32 sizeOfIndices, vec3s* translation, u32 translationNsize);
+struct Buffer_Instanced CreateBufferVTNIA3D(float* data, u32 sizeOfData, vec3s* translation, u32 translationNsize);
+>>>>>>> 56d983d5a5ed537427fb4113f2f21bae3832b784
 
 void DrawBufferE(struct Buffer* buffer);
 void DrawBufferA(struct Buffer* buffer);

@@ -86,6 +86,7 @@ struct Block CreateChunk(struct Shader* shader, enum BLOCK_TYPE blockType, vec3s
 	float blockTextureUVs[6];
 	GetBlockTexture(blockTextureUVs, texName);
 
+<<<<<<< HEAD
 	float uv_topX0 = blockTextureUVs[0] / g_SPRITE_SHEET.sheet.width;
 	float uv_topX1 = (blockTextureUVs[0] + g_SPRITE_SHEET.tileWidth) / g_SPRITE_SHEET.sheet.width;
 	float uv_topY0 = blockTextureUVs[1] / g_SPRITE_SHEET.sheet.width;
@@ -159,6 +160,8 @@ struct Block CreateChunk(struct Shader* shader, enum BLOCK_TYPE blockType, vec3s
 }
 
 
+=======
+>>>>>>> 56d983d5a5ed537427fb4113f2f21bae3832b784
 void DrawBlock(struct Block* go)
 {
 #ifdef NO_SPRITE_SHEET

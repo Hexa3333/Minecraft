@@ -37,8 +37,16 @@ enum BLOCK_TYPE
 	BLOCK_COAL
 };
 
+<<<<<<< HEAD
 struct Block CreateBlock(struct Shader* shader, enum BLOCK_TYPE blockType, vec3s position);
 struct Block CreateChunk(struct Shader* shader, enum BLOCK_TYPE blockType, vec3s position, vec3s* offsets, u32 nOffsets);
 void DrawBlock(struct Block* go);
+=======
+struct Block CreateGameObject(struct Buffer* buffer, struct Shader* shader);
+struct Block CreateGameObjectSpex(struct Buffer* buffer, struct Shader* shader, void* func);
+struct Block CreateBlock(struct Shader* shader, enum BLOCK_TYPE blockType, vec3s position);
+void DrawBlock(struct Block* go);
+void DestroyGameObject(struct Block* go);
+>>>>>>> 56d983d5a5ed537427fb4113f2f21bae3832b784
 
 #endif // GAMEOBJECT_H

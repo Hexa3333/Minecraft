@@ -158,8 +158,19 @@
     <ClInclude Include="src\util.h" />
   </ItemGroup>
   <ItemGroup>
+<<<<<<< HEAD
     <None Include="res\Shaders\ChunkF.glsl" />
     <None Include="res\Shaders\ChunkV.glsl" />
+=======
+    <None Include="res\Shaders\BasicCubeF.glsl" />
+    <None Include="res\Shaders\BasicCubeV.glsl" />
+    <None Include="res\Shaders\ChunkF.glsl" />
+    <None Include="res\Shaders\ChunkV.glsl" />
+    <None Include="res\Shaders\HudF.glsl" />
+    <None Include="res\Shaders\HudV.glsl" />
+    <None Include="res\Shaders\LineF.glsl" />
+    <None Include="res\Shaders\LineV.glsl" />
+>>>>>>> 56d983d5a5ed537427fb4113f2f21bae3832b784
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

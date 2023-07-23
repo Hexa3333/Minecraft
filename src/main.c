@@ -17,6 +17,7 @@ static void KeyInput();
 int main(void)
 {
 	InitGame("Minecraft", 720, 720);
+<<<<<<< HEAD
 	struct Shader blockShader = CreateShaderVF("res/Shaders/ChunkV.glsl", "res/Shaders/ChunkF.glsl");
 
 	vec3s offsets[16*16*16];
@@ -31,6 +32,9 @@ int main(void)
 			}
 
 	struct Block block = CreateChunk(&blockShader, BLOCK_STONE, (vec3s) { 0, 0, 0 }, offsets, 16*16*16);
+=======
+	struct Chunk* heyya = CreateChunk(0, 0);
+>>>>>>> 56d983d5a5ed537427fb4113f2f21bae3832b784
 
 	glBindTexture(GL_TEXTURE_2D, g_SPRITE_SHEET.sheet.texObj);
 	while (GetGameShouldRun())
