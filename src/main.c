@@ -16,13 +16,13 @@ static void KeyInput();
 int main(void)
 {
 	InitGame("Minecraft", 720, 720);
-	struct Chunk* heyya[3*3];
-	for (int i = 0; i < 3; i++)
-		for (int j = 0; j < 3; j++)
-		{
-			heyya[i*3 + j] = CreateChunk(i*CHUNK_WIDTH,j*CHUNK_DEPTH);
-		}
-	bool morning = true;
+	struct Chunk* heyya = CreateChunk(0, 0);
+	
+	for (int y = 0; y < (CHUNK_HEIGHT/2); y++)
+		for (int x = 0; x < CHUNK_WIDTH; x++)
+			for (int z = 0; z < CHUNK_DEPTH; z++)
+				ChunkRemoveBlockAt(heyya, x, y, z);
+
 	glBindTexture(GL_TEXTURE_2D, g_SPRITE_SHEET.sheet.texObj);
 	while (GetGameShouldRun())
 	{
@@ -42,7 +42,7 @@ int main(void)
 		for (int i = 0; i < 3; i++)
 			for (int j = 0; j < 3; j++)
 		{
-			DrawChunk(heyya[i*3 + j]);
+			DrawChunk(heyya);
 		}
 
 		if (glfwGetKey(g_MainWindow.object, GLFW_KEY_ESCAPE)) break;
@@ -51,14 +51,11 @@ int main(void)
 		glfwPollEvents();
 	}
 
-	for (int i = 0; i < 3; i++)
-		for (int j = 0; j < 3; j++)
-		{
-			free(heyya[i * 3 + j]);
-		}
+	free(heyya);
 
 	KillGame();
 }
+
 void KeyInput()
 {
 		vec3s area = glms_vec3_cross(g_MainCamera.front, g_MainCamera.up);

@@ -13,6 +13,7 @@ struct Block
 	vec3s position;
 	mat4s model;
 	void (*render)(struct Buffer* buffer);
+	enum BLOCK_TYPE type;
 
 	struct {
 		bool isVisible: 1;
@@ -41,7 +42,7 @@ enum BLOCK_TYPE
 
 struct Block CreateGameObject(struct Buffer* buffer, struct Shader* shader);
 struct Block CreateGameObjectSpex(struct Buffer* buffer, struct Shader* shader, void* func);
-struct Block CreateBlock(struct Shader* shader, enum BLOCK_TEX_NAMES texName, vec3s position);
+struct Block CreateBlock(struct Shader* shader, enum BLOCK_TYPE texName, vec3s position);
 void DrawGameObject(struct Block* go);
 void DestroyGameObject(struct Block* go);
 

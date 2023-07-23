@@ -42,6 +42,9 @@ enum BLOCK_TEX_NAMES MapBlocksToTextures(enum BLOCK_TYPE blockType)
 
 		case BLOCK_DIRT:
 			return TEX_DIRT;
+
+		default:
+			return TEX_AIR;
 	}
 }
 
@@ -83,8 +86,6 @@ void SetChunkInnerBlocksInvisible(struct Chunk* chunk)
 					cur->neighbors.behind
 					)
 					chunk->blocks[CHUNK_INDEX(x, y, z)].props.isVisible = false;
-				else 
-					chunk->blocks[CHUNK_INDEX(x,y,z)].props.isVisible = true;
 			}
 }
 

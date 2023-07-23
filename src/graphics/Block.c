@@ -1,5 +1,6 @@
 #include "Block.h"
 #include "Camera.h"
+#include "../util.h"
 
 struct Block CreateGameObject(struct Buffer* buffer, struct Shader* shader)
 {
@@ -23,8 +24,9 @@ struct Block CreateGameObjectSpex(struct Buffer* buffer, struct Shader* shader, 
 	return ret;
 }
 
-struct Block CreateBlock(struct Shader* shader, enum BLOCK_TEX_NAMES texName, vec3s position)
+struct Block CreateBlock(struct Shader* shader, enum BLOCK_TYPE blockType, vec3s position)
 {
+	enum BLOCK_TEX_NAMES texName = MapBlocksToTextures(blockType);
 	float blockTextureUVs[6];
 	GetBlockTexture(blockTextureUVs, texName);
 
@@ -95,6 +97,7 @@ struct Block CreateBlock(struct Shader* shader, enum BLOCK_TEX_NAMES texName, ve
 	ret.render = DetermineDrawFunc(DetermineBufferType(&ret.buffer));
 	ret.model = GLMS_MAT4_IDENTITY;
 	ret.position = position;
+	ret.type = blockType;
 	ret.props.isTransparent = false;
 	memset(&ret.neighbors, 0, 6*sizeof(struct Block*));
 
