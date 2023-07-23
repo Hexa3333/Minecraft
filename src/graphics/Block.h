@@ -31,6 +31,13 @@ struct Block
 	} neighbors;
 };
 
+enum BLOCK_TYPE
+{
+	BLOCK_AIR, BLOCK_STONE,
+	BLOCK_DIRT,
+	BLOCK_WATER,
+	BLOCK_COAL
+};
 
 struct Block CreateGameObject(struct Buffer* buffer, struct Shader* shader);
 struct Block CreateGameObjectSpex(struct Buffer* buffer, struct Shader* shader, void* func);

@@ -56,11 +56,12 @@ int main(void)
 		{
 			free(heyya[i * 3 + j]);
 		}
+
 	KillGame();
 }
 void KeyInput()
 {
-		vec3s cross = glms_vec3_cross(g_MainCamera.front, g_MainCamera.up);
+		vec3s area = glms_vec3_cross(g_MainCamera.front, g_MainCamera.up);
 		vec3s moveSpeed = {20.0f * DT, 20.0f * DT, 20.0f * DT};
 
 		if (glfwGetKey(g_MainWindow.object, GLFW_KEY_W))
@@ -69,9 +70,9 @@ void KeyInput()
 			g_MainCamera.position = glms_vec3_sub(g_MainCamera.position, glms_vec3_mul(g_MainCamera.front, moveSpeed));
 
 		if (glfwGetKey(g_MainWindow.object, GLFW_KEY_A))
-			g_MainCamera.position = glms_vec3_add(g_MainCamera.position, glms_vec3_mul(cross, moveSpeed));
+			g_MainCamera.position = glms_vec3_add(g_MainCamera.position, glms_vec3_mul(area, moveSpeed));
 		if (glfwGetKey(g_MainWindow.object, GLFW_KEY_D))
-			g_MainCamera.position = glms_vec3_sub(g_MainCamera.position, glms_vec3_mul(cross, moveSpeed));
+			g_MainCamera.position = glms_vec3_sub(g_MainCamera.position, glms_vec3_mul(area, moveSpeed));
 
 		if (glfwGetKey(g_MainWindow.object, GLFW_KEY_LEFT_CONTROL))
 			g_MainCamera.position.y -= 25.0f * DT;

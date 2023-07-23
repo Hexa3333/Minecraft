@@ -30,6 +30,21 @@ float* GetSpriteXYFromSheet(u8 tileIndexX, u8 tileIndexY)
 	}
 }
 
+enum BLOCK_TEX_NAMES MapBlocksToTextures(enum BLOCK_TYPE blockType)
+{
+	switch (blockType)
+	{
+		case BLOCK_AIR:
+			return TEX_AIR;
+
+		case BLOCK_STONE:
+			return TEX_ROCK;
+
+		case BLOCK_DIRT:
+			return TEX_DIRT;
+	}
+}
+
 void SetNeighboringBlocks(struct Chunk* chunk, u8 blockIndexX, u8 blockIndexY, u8 blockIndexZ)
 {
 	struct Block* curBlock = &chunk->blocks[blockIndexY][blockIndexZ][blockIndexX];

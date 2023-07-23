@@ -25,11 +25,11 @@ extern struct SpriteSheet g_SPRITE_SHEET;
 
 enum BLOCK_TEX_NAMES
 {
-	AIR,
-	ROCK,
-	DIRTWGRASS,
-	DIRT,
-	SAND
+	TEX_AIR,
+	TEX_ROCK,
+	TEX_DIRTWGRASS,
+	TEX_DIRT,
+	TEX_SAND
 };
 
 void SpriteSetup();
