@@ -313,7 +313,7 @@ void DrawBufferA_Instanced(struct Buffer_Instanced* buffer)
 {
 	glBindVertexArray(buffer->root.VAO);
 	glBindBuffer(GL_ARRAY_BUFFER, buffer->root.VBO);
-	printf("Instance Cnt: %u\n", buffer->instanceCount);
+
 	glDrawArraysInstanced(GL_TRIANGLES, 0, buffer->root.sizeOfData, buffer->instanceCount);
 }
 

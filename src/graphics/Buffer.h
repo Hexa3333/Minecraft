@@ -9,6 +9,7 @@ struct Buffer
 {
 	GLuint VAO, VBO, EBO;
 	float* data;
+	void (*render)(struct Buffer*);
 	u32 sizeOfData;
 	u32* indices;
 	u32 sizeOfIndices;

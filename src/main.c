@@ -26,6 +26,8 @@ int main(void)
 	struct Block block3 = CreateChunk(&blockShader, BLOCK_STONE, (vec3s) { 0, 0, CHUNK_DEPTH }, offsets, 16*16*16);
 	struct Block block4 = CreateChunk(&blockShader, BLOCK_STONE, (vec3s) { CHUNK_WIDTH, 0, CHUNK_DEPTH }, offsets, 16*16*16);
 
+	free(offsets);
+
 	glBindTexture(GL_TEXTURE_2D, g_SPRITE_SHEET.sheet.texObj);
 	while (GetGameShouldRun())
 	{
