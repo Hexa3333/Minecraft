@@ -5,10 +5,11 @@
 
 #include "common.h"
 #include "Time.h"
-#include "Chunk.h"
-#include "graphics/Camera.h"
 #include "Game.h"
 #include "util.h"
+#include "graphics/Block.h"
+#include "graphics/Camera.h"
+#include "graphics/Shader.h"
 #include "graphics/Light.h"
 
 float sunMod = 1.0f;
@@ -16,12 +17,20 @@ static void KeyInput();
 int main(void)
 {
 	InitGame("Minecraft", 720, 720);
-	struct Chunk* heyya = CreateChunk(0, 0);
-	
-	for (int y = 0; y < (CHUNK_HEIGHT/2); y++)
-		for (int x = 0; x < CHUNK_WIDTH; x++)
-			for (int z = 0; z < CHUNK_DEPTH; z++)
-				ChunkRemoveBlockAt(heyya, x, y, z);
+	struct Shader blockShader = CreateShaderVF("res/Shaders/ChunkV.glsl", "res/Shaders/ChunkF.glsl");
+
+	vec3s offsets[16*16*16];
+	for (int y = 0; y < 16; ++y)
+		for (int z = 0; z < 16; ++z)
+			for (int x = 0; x < 16; ++x)
+			{
+				vec3s* offset = &offsets[x + 16 * (y + 16 * z)];
+				offset->x = x;
+				offset->y = y;
+				offset->z = z;
+			}
+
+	struct Block block = CreateChunk(&blockShader, BLOCK_STONE, (vec3s) { 0, 0, 0 }, offsets, 16*16*16);
 
 	glBindTexture(GL_TEXTURE_2D, g_SPRITE_SHEET.sheet.texObj);
 	while (GetGameShouldRun())
@@ -37,13 +46,15 @@ int main(void)
 		float pY = g_MainCamera.position.y;
 		float pZ = g_MainCamera.position.z;
 
+		printf("FPS: %.1f\n", 1 / DT);
 		SunSet(sunMod);
-		SendSun(&g_TerrainShader);
-		for (int i = 0; i < 3; i++)
-			for (int j = 0; j < 3; j++)
-		{
-			DrawChunk(heyya);
-		}
+		SendSun(&blockShader);
+
+		SendUniformMat4(block.shader, "model", &block.model);
+		SendUniformMat4(block.shader, "view", &g_View);
+		SendUniformMat4(block.shader, "projection", &g_Projection);
+		UseShader(&blockShader);
+		DrawBufferA(&block.buffer);
 
 		if (glfwGetKey(g_MainWindow.object, GLFW_KEY_ESCAPE)) break;
 
@@ -51,7 +62,6 @@ int main(void)
 		glfwPollEvents();
 	}
 
-	free(heyya);
 
 	KillGame();
 }

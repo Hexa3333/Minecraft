@@ -1,5 +1,7 @@
 #include "util.h"
 #include "graphics/Camera.h"
+#include "graphics/Sprite.h"
+#include "graphics/Block.h"
 
 // out: 12 floats
 void CreateLine(float* out, vec3s start, vec3s end, vec3s color)
@@ -47,7 +49,7 @@ enum BLOCK_TEX_NAMES MapBlocksToTextures(enum BLOCK_TYPE blockType)
 			return TEX_AIR;
 	}
 }
-
+#if 0
 void SetNeighboringBlocks(struct Chunk* chunk, u8 blockIndexX, u8 blockIndexY, u8 blockIndexZ)
 {
 	struct Block* curBlock = &chunk->blocks[blockIndexY][blockIndexZ][blockIndexX];
@@ -88,7 +90,6 @@ void SetChunkInnerBlocksInvisible(struct Chunk* chunk)
 					chunk->blocks[CHUNK_INDEX(x, y, z)].props.isVisible = false;
 			}
 }
-
 void CullBackFaces(struct Chunk* chunk)
 {
 	vec3s cameraPos = g_MainCamera.position;
@@ -138,3 +139,4 @@ void CullBackFaces(struct Chunk* chunk)
 	}
 
 }
+#endif

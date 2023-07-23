@@ -2,7 +2,6 @@
 #define UTIL_H
 
 #include "common.h"
-#include "Chunk.h"
 #include <cglm/struct.h>
 #include <assert.h>
 

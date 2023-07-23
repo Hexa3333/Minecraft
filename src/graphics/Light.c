@@ -21,7 +21,6 @@ struct DirectionalLight CreateDirectionalLight(vec3s color, float intensity, vec
 // TODO: Sun and time of day modifiers
 void SunSet(float timeOfDay)
 {
-	float reverseFactor = 1.0f - timeOfDay;
 	g_Sun.ambientLight = CreateAmbientLight((vec3s){1,1,1}, 1);
-	g_Sun.directionalLight = CreateDirectionalLight((vec3s){1,0,0}, 1, (vec3s){timeOfDay, reverseFactor, 0.1f});
+	g_Sun.directionalLight = CreateDirectionalLight((vec3s){1,0,0}, 1, (vec3s){0.4f, 0.4f, 0.4f});
 }

@@ -15,9 +15,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\Chunk.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\Game.c">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -54,12 +51,12 @@
     <ClCompile Include="src\graphics\Sprite.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\AdditionalRendering.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="glad\glad.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Chunk.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\common.h">
@@ -101,5 +98,12 @@
     <ClInclude Include="src\graphics\stb_image.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\AdditionalRendering.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="res\Shaders\ChunkV.glsl" />
+    <None Include="res\Shaders\ChunkF.glsl" />
   </ItemGroup>
 </Project>

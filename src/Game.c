@@ -3,7 +3,6 @@
 #include "graphics/Shader.h"
 #include "graphics/Camera.h"
 #include "Input.h"
-#include "Chunk.h"
 
 struct Window g_MainWindow;
 
@@ -37,11 +36,11 @@ bool InitGame(const char* Title, u16 width, u16 height)
 	// Component Setup
 	ShaderSetup();
 	SpriteSetup();
-	SunSet(.7f);
+	SunSet(.3f);
 	BuildSpriteSheet("res/Sprites/blocks.png", 0, 5, 5);
 	
 	float zNear = 0.1f;
-	float zFar = 100.0f;
+	float zFar = 400.0f;
 	// Projection Matrix
 	g_Projection = glms_perspective(glm_rad(45.0f), (float)(g_MainWindow.screenHeight / g_MainWindow.screenWidth), zNear, zFar);
 	

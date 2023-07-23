@@ -8,17 +8,14 @@
 
 struct Block
 {
-	struct Buffer buffer;
+	struct Buffer_Instanced buffer;
 	struct Shader* shader;
 	vec3s position;
 	mat4s model;
-	void (*render)(struct Buffer* buffer);
 	enum BLOCK_TYPE type;
 
 	struct {
 		bool isVisible: 1;
-		bool isTransparent: 1;
-		bool canLeaveParticles: 1;
 	} props;
 	
 	struct
@@ -40,10 +37,8 @@ enum BLOCK_TYPE
 	BLOCK_COAL
 };
 
-struct Block CreateGameObject(struct Buffer* buffer, struct Shader* shader);
-struct Block CreateGameObjectSpex(struct Buffer* buffer, struct Shader* shader, void* func);
-struct Block CreateBlock(struct Shader* shader, enum BLOCK_TYPE texName, vec3s position);
-void DrawGameObject(struct Block* go);
-void DestroyGameObject(struct Block* go);
+struct Block CreateBlock(struct Shader* shader, enum BLOCK_TYPE blockType, vec3s position);
+struct Block CreateChunk(struct Shader* shader, enum BLOCK_TYPE blockType, vec3s position, vec3s* offsets, u32 nOffsets);
+void DrawBlock(struct Block* go);
 
 #endif // GAMEOBJECT_H

@@ -126,7 +126,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="src\Chunk.c" />
+    <ClCompile Include="src\AdditionalRendering.c" />
     <ClCompile Include="src\Game.c" />
     <ClCompile Include="src\glad.c" />
     <ClCompile Include="src\graphics\Block.c" />
@@ -142,7 +142,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="glad\glad.h" />
-    <ClInclude Include="src\Chunk.h" />
+    <ClInclude Include="src\AdditionalRendering.h" />
     <ClInclude Include="src\common.h" />
     <ClInclude Include="src\Game.h" />
     <ClInclude Include="src\graphics\Block.h" />
@@ -156,6 +156,10 @@
     <ClInclude Include="src\stb_perlin.h" />
     <ClInclude Include="src\Time.h" />
     <ClInclude Include="src\util.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="res\Shaders\ChunkF.glsl" />
+    <None Include="res\Shaders\ChunkV.glsl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
