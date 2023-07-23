@@ -72,8 +72,8 @@ struct Block CreateBlock(struct Shader* shader, enum BLOCK_TYPE blockType, vec3s
 	struct Block ret;
 	ret.buffer.root = CreateBufferVTNA(cubeVertices, sizeof(cubeVertices));
 	ret.shader = shader;
-	ret.model = GLMS_MAT4_IDENTITY;
 	ret.position = position;
+	ret.model = glms_translate(GLMS_MAT4_IDENTITY, ret.position);
 	ret.type = blockType;
 	memset(&ret.neighbors, 0, 6*sizeof(struct Block*));
 
@@ -150,8 +150,8 @@ struct Block CreateChunk(struct Shader* shader, enum BLOCK_TYPE blockType, vec3s
 	struct Block ret;
 	ret.buffer = CreateBufferVTNA_Instanced(cubeVertices, sizeof(cubeVertices), offsets, nOffsets);
 	ret.shader = shader;
-	ret.model = GLMS_MAT4_IDENTITY;
 	ret.position = position;
+	ret.model = glms_translate(GLMS_MAT4_IDENTITY, ret.position);
 	ret.type = blockType;
 	memset(&ret.neighbors, 0, 6 * sizeof(struct Block*));
 

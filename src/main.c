@@ -22,6 +22,9 @@ int main(void)
 	vec3s* offsets = GetChunkOffsets();
 
 	struct Block block = CreateChunk(&blockShader, BLOCK_STONE, (vec3s) { 0, 0, 0 }, offsets, 16*16*16);
+	struct Block block2 = CreateChunk(&blockShader, BLOCK_STONE, (vec3s) { CHUNK_WIDTH, 0, 0 }, offsets, 16*16*16);
+	struct Block block3 = CreateChunk(&blockShader, BLOCK_STONE, (vec3s) { 0, 0, CHUNK_DEPTH }, offsets, 16*16*16);
+	struct Block block4 = CreateChunk(&blockShader, BLOCK_STONE, (vec3s) { CHUNK_WIDTH, 0, CHUNK_DEPTH }, offsets, 16*16*16);
 
 	glBindTexture(GL_TEXTURE_2D, g_SPRITE_SHEET.sheet.texObj);
 	while (GetGameShouldRun())
@@ -42,6 +45,9 @@ int main(void)
 		SendSun(&blockShader);
 
 		DrawChunk(&block);
+		DrawChunk(&block2);
+		DrawChunk(&block3);
+		DrawChunk(&block4);
 
 		if (glfwGetKey(g_MainWindow.object, GLFW_KEY_ESCAPE)) break;
 
