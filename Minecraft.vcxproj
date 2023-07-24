@@ -137,6 +137,7 @@
     <ClCompile Include="src\graphics\Sprite.c" />
     <ClCompile Include="src\Input.c" />
     <ClCompile Include="src\main.c" />
+    <ClCompile Include="src\Ray.c" />
     <ClCompile Include="src\Time.c" />
     <ClCompile Include="src\util.c" />
   </ItemGroup>
@@ -153,6 +154,7 @@
     <ClInclude Include="src\graphics\Sprite.h" />
     <ClInclude Include="src\graphics\stb_image.h" />
     <ClInclude Include="src\Input.h" />
+    <ClInclude Include="src\Ray.h" />
     <ClInclude Include="src\stb_perlin.h" />
     <ClInclude Include="src\Time.h" />
     <ClInclude Include="src\util.h" />
@@ -160,6 +162,8 @@
   <ItemGroup>
     <None Include="res\Shaders\ChunkF.glsl" />
     <None Include="res\Shaders\ChunkV.glsl" />
+    <None Include="res\Shaders\QuadF.glsl" />
+    <None Include="res\Shaders\QuadV.glsl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

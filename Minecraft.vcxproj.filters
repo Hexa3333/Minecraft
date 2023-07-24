@@ -54,6 +54,9 @@
     <ClCompile Include="src\AdditionalRendering.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\Ray.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="glad\glad.h">
@@ -101,9 +104,14 @@
     <ClInclude Include="src\AdditionalRendering.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\Ray.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="res\Shaders\ChunkV.glsl" />
     <None Include="res\Shaders\ChunkF.glsl" />
+    <None Include="res\Shaders\QuadV.glsl" />
+    <None Include="res\Shaders\QuadF.glsl" />
   </ItemGroup>
 </Project>

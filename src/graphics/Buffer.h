@@ -25,8 +25,10 @@ struct Buffer_Instanced
 
 enum BufferType
 {
-	V, VC, VT, VTN,
-	VA, VCA, VTA, VTNA,
+	VA, VE,				// 3 floats
+	VTA, VTE,			// 5 floats
+	VCA, VCE, VNA, VNE, // 6 floats
+	VTNA, VTNE,			// 8 floats
 	LINE = VCA
 };
 
@@ -37,6 +39,10 @@ struct Buffer CreateBufferVE(float* data, u32 sizeOfData, u32* indices, u32 size
 // Vertex Color
 struct Buffer CreateBufferVCA(float* data, u32 sizeOfData);
 struct Buffer CreateBufferVCE(float* data, u32 sizeOfData, u32* indices, u32 sizeOfIndices);
+
+// Vertex-Normals
+struct Buffer CreateBufferVNA(float* data, u32 sizeOfData);
+struct Buffer CreateBufferVNE(float* data, u32 sizeOfData, u32* indices, u32 sizeOfIndices);
 
 // Vertex-Texture
 struct Buffer CreateBufferVTA(float* data, u32 sizeOfData);
