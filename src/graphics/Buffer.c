@@ -374,6 +374,11 @@ void DrawBufferE(struct Buffer* buffer)
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, buffer->EBO);
 
 	glDrawElements(GL_TRIANGLES, buffer->sizeOfIndices, GL_UNSIGNED_INT, 0);
+#ifdef MC_DEBUG
+	glBindVertexArray(0);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+#endif
 }
 
 void DrawBufferA(struct Buffer* buffer)
@@ -382,6 +387,10 @@ void DrawBufferA(struct Buffer* buffer)
 	glBindBuffer(GL_ARRAY_BUFFER, buffer->VBO);
 
 	glDrawArrays(GL_TRIANGLES, 0, buffer->sizeOfData);
+#ifdef MC_DEBUG
+	glBindVertexArray(0);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+#endif
 }
 
 void DrawBufferE_Instanced(struct Buffer_Instanced* buffer)
@@ -391,6 +400,11 @@ void DrawBufferE_Instanced(struct Buffer_Instanced* buffer)
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, buffer->root.EBO);
 
 	glDrawElementsInstanced(GL_TRIANGLES, buffer->root.sizeOfIndices, GL_UNSIGNED_INT, 0, buffer->instanceCount);
+#ifdef MC_DEBUG
+	glBindVertexArray(0);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+#endif
 }
 void DrawBufferA_Instanced(struct Buffer_Instanced* buffer)
 {
@@ -398,6 +412,10 @@ void DrawBufferA_Instanced(struct Buffer_Instanced* buffer)
 	glBindBuffer(GL_ARRAY_BUFFER, buffer->root.VBO);
 
 	glDrawArraysInstanced(GL_TRIANGLES, 0, buffer->root.sizeOfData, buffer->instanceCount);
+#ifdef MC_DEBUG
+	glBindVertexArray(0);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+#endif
 }
 
 void DrawBufferLine(struct Buffer* buffer)
@@ -406,6 +424,10 @@ void DrawBufferLine(struct Buffer* buffer)
 	glBindBuffer(GL_ARRAY_BUFFER, buffer->VBO);
 
 	glDrawArrays(GL_LINES, 0, buffer->sizeOfData);
+#ifdef MC_DEBUG
+	glBindVertexArray(0);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+#endif
 }
 
 enum BufferType DetermineBufferType(struct Buffer* buffer)
