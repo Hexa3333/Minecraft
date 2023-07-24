@@ -164,18 +164,18 @@ void DrawBlock(struct Block* go)
 #ifdef NO_SPRITE_SHEET
 	UseSprite(&go->sprite);
 #endif
+	UseShader(go->shader);
 	SendUniformMat4(go->shader, "model", &go->model); 
 	SendUniformMat4(go->shader, "view", &g_View); 
 	SendUniformMat4(go->shader, "projection", &g_Projection); 
-	UseShader(go->shader);
 	DrawBufferA(&go->buffer.root);
 }
 
 void DrawChunk(struct Block* chunk)
 {
+	UseShader(chunk->shader);
 	SendUniformMat4(chunk->shader, "model", &chunk->model);
 	SendUniformMat4(chunk->shader, "view", &g_View);
 	SendUniformMat4(chunk->shader, "projection", &g_Projection);
-	UseShader(chunk->shader);
 	DrawBufferA_Instanced(&chunk->buffer);
 }
