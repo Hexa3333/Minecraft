@@ -16,6 +16,7 @@ struct AdditionalRenderable CreateGameObjectSpex(struct Buffer* buffer, struct S
 	ret.buffer = *buffer;
 	ret.shader = shader;
 	ret.model = GLMS_MAT4_IDENTITY;
+	ret.buffer.render = func;
 
 	return ret;
 }
