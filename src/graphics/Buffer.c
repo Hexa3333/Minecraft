@@ -336,6 +336,46 @@ struct Buffer CreateBufferVTNE(float* data, u32 sizeOfData, u32* indices, u32 si
 	return ret;
 }
 
+struct Buffer_Instanced CreateBufferVCA_Instanced(float* data, u32 sizeOfData, vec3s* offsets, u32 nOffsets)
+{
+	struct Buffer_Instanced ret;
+	ret.root.data = data;
+	ret.root.sizeOfData = sizeOfData;
+	ret.root.indices = NULL;
+	ret.root.sizeOfIndices = 0;
+	ret.root.stride = 6 * sizeof(float);
+
+	glGenVertexArrays(1, &ret.root.VAO);
+	glGenBuffers(1, &ret.root.VBO);
+
+	glBindVertexArray(ret.root.VAO);
+	glBindBuffer(GL_ARRAY_BUFFER, ret.root.VBO);
+
+	glBufferData(GL_ARRAY_BUFFER, sizeOfData, data, GL_STATIC_DRAW);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, ret.root.stride, (void*)0);
+	glEnableVertexAttribArray(0);
+
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, ret.root.stride, (void*)(3 * sizeof(float)));
+	glEnableVertexAttribArray(1);
+
+	// Instance VBO
+	glGenBuffers(1, &ret.instanceVBO);
+	glBindBuffer(GL_ARRAY_BUFFER, ret.instanceVBO);
+
+	glBufferData(GL_ARRAY_BUFFER, nOffsets * sizeof(vec3s), offsets, GL_STATIC_DRAW);
+	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(vec3s), (void*)0);
+	glEnableVertexAttribArray(2);
+
+	glVertexAttribDivisor(2, 1);
+
+#ifdef MC_DEBUG
+	glBindVertexArray(0);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+#endif
+
+	return ret;
+}
+
 struct Buffer_Instanced CreateBufferVTNA_Instanced(float* data, u32 sizeOfData, vec3s* offsets, u32 nOffsets)
 {
 	struct Buffer_Instanced ret;

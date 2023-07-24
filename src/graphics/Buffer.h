@@ -52,6 +52,10 @@ struct Buffer CreateBufferVTE(float* data, u32 sizeOfData, u32* indices, u32 siz
 struct Buffer CreateBufferVTNA(float* data, u32 sizeOfData);
 struct Buffer CreateBufferVTNE(float* data, u32 sizeOfData, u32* indices, u32 sizeOfIndices);
 
+// Vertex-Colors
+struct Buffer_Instanced CreateBufferVCA_Instanced(float* data, u32 sizeOfData, vec3s* offsets, u32 nOffsets);
+struct Buffer_Instanced CreateBufferVCE_Instanced(float* data, u32 sizeOfData, u32* indices, u32 sizeOfIndices, vec3s* offsets, u32 nOffsets);
+
 // Vertex-Texture-Normals (Instanced)
 struct Buffer_Instanced CreateBufferVTNA_Instanced(float* data, u32 sizeOfData, vec3s* offsets, u32 nOffsets);
 struct Buffer_Instanced CreateBufferVTNE_Instanced(float* data, u32 sizeOfData, u32* indices, u32 sizeOfIndices, vec3s* offsets, u32 nOffsets);
