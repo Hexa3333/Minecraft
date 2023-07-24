@@ -31,21 +31,24 @@ enum BufferType
 };
 
 // Vertex
-struct Buffer CreateBufferVE(float* data, u32 sizeOfData, u32* indices, u32 sizeOfIndices);
 struct Buffer CreateBufferVA(float* data, u32 sizeOfData);
+struct Buffer CreateBufferVE(float* data, u32 sizeOfData, u32* indices, u32 sizeOfIndices);
 
+// Vertex Color
 struct Buffer CreateBufferVCA(float* data, u32 sizeOfData);
+struct Buffer CreateBufferVCE(float* data, u32 sizeOfData, u32* indices, u32 sizeOfIndices);
+
 // Vertex-Texture
-struct Buffer CreateBufferVTE(float* data, u32 sizeOfData, u32* indices, u32 sizeOfIndices);
 struct Buffer CreateBufferVTA(float* data, u32 sizeOfData);
+struct Buffer CreateBufferVTE(float* data, u32 sizeOfData, u32* indices, u32 sizeOfIndices);
 
 // Vertex-Texture-Normals
 struct Buffer CreateBufferVTNA(float* data, u32 sizeOfData);
-struct Buffer CreateBufferVTNA(float* data, u32 sizeOfData);
+struct Buffer CreateBufferVTNE(float* data, u32 sizeOfData, u32* indices, u32 sizeOfIndices);
 
 // Vertex-Texture-Normals (Instanced)
-struct Buffer_Instanced CreateBufferVTNE_Instanced(float* data, u32 sizeOfData, u32* indices, u32 sizeOfIndices, vec3s* offsets, u32 nOffsets);
 struct Buffer_Instanced CreateBufferVTNA_Instanced(float* data, u32 sizeOfData, vec3s* offsets, u32 nOffsets);
+struct Buffer_Instanced CreateBufferVTNE_Instanced(float* data, u32 sizeOfData, u32* indices, u32 sizeOfIndices, vec3s* offsets, u32 nOffsets);
 
 void DrawBufferE(struct Buffer* buffer);
 void DrawBufferA(struct Buffer* buffer);
