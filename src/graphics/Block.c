@@ -165,6 +165,7 @@ void DrawBlock(struct Block* go)
 	UseSprite(&go->sprite);
 #endif
 	UseShader(go->shader);
+	SendSun(go->shader);
 	SendUniformMat4(go->shader, "model", &go->model); 
 	SendUniformMat4(go->shader, "view", &g_View); 
 	SendUniformMat4(go->shader, "projection", &g_Projection); 
@@ -174,6 +175,7 @@ void DrawBlock(struct Block* go)
 void DrawChunk(struct Block* chunk)
 {
 	UseShader(chunk->shader);
+	SendSun(chunk->shader);
 	SendUniformMat4(chunk->shader, "model", &chunk->model);
 	SendUniformMat4(chunk->shader, "view", &g_View);
 	SendUniformMat4(chunk->shader, "projection", &g_Projection);

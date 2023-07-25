@@ -22,34 +22,6 @@ float quadVerts[] = {
 	-0.5f, -0.5f, 0.0f,		0, 0, 1 // sol alt
 };
 
-struct BlockNormalLines
-{
-	struct Block* latch;
-	struct Shader shader;
-	float offset;
-	struct Buffer originalLine;
-};
-
-struct BlockNormalLines SetBlockNormalLines(struct Block* block, float offset)
-{
-	struct BlockNormalLines ret;
-	ret.latch = block;
-	ret.shader = CreateShaderVF("res/Shaders/LineV.glsl", "res/Shaders/LineF.glsl");
-	ret.offset = offset;
-
-	float lineData[12];
-	CreateLine(lineData, (vec3s) { 0, 0, offset }, (vec3s) { 0, 0, offset + 2 }, (vec3s) { 1, 0, 0 }); // front
-	ret.originalLine = CreateBufferVCA(lineData, 12);
-
-	return ret;
-}
-
-void DrawBlockNormalLines(struct BlockNormalLines* go)
-{
-	UseShader(&go->shader);
-	
-}
-
 float sunMod = 1.0f;
 static void KeyInput();
 int main(void)
@@ -57,12 +29,13 @@ int main(void)
 	InitGame("Minecraft", 720, 720);
 	struct Shader quadShader = CreateShaderVF("res/Shaders/quadV.glsl", "res/Shaders/quadF.glsl");
 	struct Shader chunkShader = CreateShaderVF("res/Shaders/ChunkV.glsl", "res/Shaders/ChunkF.glsl");
+	struct Shader chunkShader2 = CreateShaderVF("res/Shaders/ChunkV.glsl", "res/Shaders/ChunkF.glsl");
 	
 	struct Buffer quad = CreateBufferVNA(quadVerts, sizeof(quadVerts));
 	mat4s quadModel = glms_translate(GLMS_MAT4_IDENTITY, (vec3s) { 0, 3, 0 });
 
 	struct Block block = CreateBlock(&chunkShader, BLOCK_STONE, (vec3s) { 0, 3, 0 });
-	struct BlockNormalLines bnl = SetBlockNormalLines(&block, 0.5f);
+	struct Block block2 = CreateBlock(&chunkShader2, BLOCK_STONE, (vec3s) { 0, 2, 0 });
 
 	glBindTexture(GL_TEXTURE_2D, g_SPRITE_SHEET.sheet.texObj);
 	while (GetGameShouldRun())
@@ -79,10 +52,9 @@ int main(void)
 		float pZ = g_MainCamera.position.z;
 
 		SunSet(sunMod);
-		SendSun(&chunkShader);
 
 		DrawBlock(&block);
-		DrawBlockNormalLines(&bnl);
+		DrawBlock(&block2);
 
 		if (glfwGetKey(g_MainWindow.object, GLFW_KEY_ESCAPE)) break;
 
