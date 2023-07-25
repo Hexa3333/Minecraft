@@ -2,6 +2,7 @@
 #include "Time.h"
 #include "graphics/Shader.h"
 #include "graphics/Camera.h"
+#include "AdditionalRendering.h"
 #include "Input.h"
 
 struct Window g_MainWindow;
@@ -38,6 +39,7 @@ bool InitGame(const char* Title, u16 width, u16 height)
 	SpriteSetup();
 	SunSet(.3f);
 	BuildSpriteSheet("res/Sprites/blocks.png", 0, 5, 5);
+	AdditionalRenderingSetup();
 	
 	float zNear = 0.1f;
 	float zFar = 400.0f;

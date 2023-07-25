@@ -2,6 +2,7 @@
 #define ADDITIONAL_RENDERING_H
 
 #include "graphics/Buffer.h"
+#include "graphics/Block.h"
 #include <cglm/struct.h>
 
 struct AdditionalRenderable
@@ -12,7 +13,10 @@ struct AdditionalRenderable
 	mat4s model;
 };
 
+void AdditionalRenderingSetup(void);
 struct AdditionalRenderable CreateGameObject(struct Buffer* buffer, struct Shader* shader);
 struct AdditionalRenderable CreateGameObjectSpex(struct Buffer* buffer, struct Shader* shader, void* func);
+
+void DebugDrawLine(struct Block* latch);
 
 #endif // ADDITIONAL_RENDERING_H
