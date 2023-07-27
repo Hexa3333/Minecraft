@@ -37,8 +37,6 @@ int main(void)
 	mat4s quadModel = glms_translate(GLMS_MAT4_IDENTITY, (vec3s) { 0, 3, 0 });
 
 	struct Chunk chunk = CreateChunk(&chunkShader, BLOCK_DIRT, (vec3s) { 0, 0, 0 });
-	struct Chunk chunk2 = CreateChunk(&chunkShader, BLOCK_DIRT, (vec3s) { CHUNK_WIDTH, 0, 0 });
-	struct Chunk chunk3 = CreateChunk(&chunkShader, BLOCK_DIRT, (vec3s) { 0, 0, CHUNK_DEPTH });
 
 	glBindTexture(GL_TEXTURE_2D, g_SPRITE_SHEET.sheet.texObj);
 	while (GetGameShouldRun())
@@ -56,8 +54,6 @@ int main(void)
 
 		SunSet(sunMod);
 		DrawChunk(&chunk);
-		DrawChunk(&chunk2);
-		DrawChunk(&chunk3);
 
 #if 0
 		for (int z = 0; z < 5; ++z)
@@ -83,8 +79,6 @@ int main(void)
 		glfwPollEvents();
 	}
 	free(chunk.blocks);
-	free(chunk2.blocks);
-	free(chunk3.blocks);
 
 	KillGame();
 }

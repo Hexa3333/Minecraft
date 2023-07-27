@@ -87,24 +87,32 @@ struct Chunk CreateChunk(struct Shader* shader, enum BLOCK_TYPE blockType, vec3s
 		ret.blocks[CHUNK_BLOCK_INDEXER(x,y,z)].position = (vec3s){ position.x + x, position.y + y, position.z + z };
 		ret.blocks[CHUNK_BLOCK_INDEXER(x,y,z)].model = glms_translate(GLMS_MAT4_IDENTITY, ret.blocks[CHUNK_BLOCK_INDEXER(x, y, z)].position);
 		ret.blocks[CHUNK_BLOCK_INDEXER(x,y,z)].type = BLOCK_DIRT;
+		ret.blocks[CHUNK_BLOCK_INDEXER(x, y, z)].isVisible = true;
 		memset(&ret.blocks[CHUNK_BLOCK_INDEXER(x, y, z)].neighbors, 0, 6 * sizeof(struct Block*));
 	}
+
+	SetNeighboringBlocksOfChunk(&ret);
+	SetChunkInnerBlocksInvisible(&ret);
 
 	return ret;
 }
 
 void DrawChunk(struct Chunk* chunk)
 {
+	//CullBackFaces(chunk);
 	for (int y = 0; y < CHUNK_HEIGHT; ++y)
 		for (int z = 0; z < CHUNK_DEPTH; ++z)
 			for (int x = 0; x < CHUNK_WIDTH; ++x)
 	{
-		UseShader(chunk->shader);
-		SendSun(chunk->shader);
-		SendUniformMat4(chunk->shader, "model", &chunk->blocks[CHUNK_BLOCK_INDEXER(x, y, z)].model);
-		SendUniformMat4(chunk->shader, "view", &g_View);
-		SendUniformMat4(chunk->shader, "projection", &g_Projection);
-		DrawBufferA(&chunk->blocks->buffer);
+		if (chunk->blocks[CHUNK_BLOCK_INDEXER(x, y, z)].isVisible)
+		{
+			UseShader(chunk->shader);
+			SendSun(chunk->shader);
+			SendUniformMat4(chunk->shader, "model", &chunk->blocks[CHUNK_BLOCK_INDEXER(x, y, z)].model);
+			SendUniformMat4(chunk->shader, "view", &g_View);
+			SendUniformMat4(chunk->shader, "projection", &g_Projection);
+			DrawBufferA(&chunk->blocks->buffer);
+		}
 	}
 }
 

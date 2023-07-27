@@ -82,17 +82,18 @@ u8* ChunkFlattenIndex(u16 index)
 	return ret;
 }
 
-#if 0
-void SetNeighboringBlocks(struct Chunk* chunk, u8 blockIndexX, u8 blockIndexY, u8 blockIndexZ)
+void SetNeighboringBlocks(struct Chunk* chunk, u8 x, u8 y, u8 z)
 {
-	struct Block* curBlock = &chunk->blocks[blockIndexY][blockIndexZ][blockIndexX];
+	struct Block* curBlock = &chunk->blocks[CHUNK_BLOCK_INDEXER(x, y, z)];
 
-	curBlock->neighbors.left =   (blockIndexX != 0) ? &chunk->blocks[blockIndexY][blockIndexZ][blockIndexX-1] : NULL;
-	curBlock->neighbors.right =  (blockIndexX != CHUNK_WIDTH-1) ? &chunk->blocks[blockIndexY][blockIndexZ][blockIndexX+1] : NULL;
-	curBlock->neighbors.above =  (blockIndexY != CHUNK_HEIGHT-1) ? &chunk->blocks[blockIndexY+1][blockIndexZ][blockIndexX] : NULL;
-	curBlock->neighbors.below =  (blockIndexY != 0) ? &chunk->blocks[blockIndexY-1][blockIndexZ][blockIndexX] : NULL;
-	curBlock->neighbors.front =  (blockIndexZ != 0) ? &chunk->blocks[blockIndexY][blockIndexZ-1][blockIndexX] : NULL;
-	curBlock->neighbors.behind = (blockIndexZ != CHUNK_DEPTH-1) ? &chunk->blocks[blockIndexY][blockIndexZ+1][blockIndexX] : NULL;
+	curBlock->neighbors.left =   (x != 0) ? &chunk->blocks[CHUNK_BLOCK_INDEXER(x-1, y, z)] : NULL;
+	curBlock->neighbors.right =  (x != CHUNK_WIDTH-1) ? &chunk->blocks[CHUNK_BLOCK_INDEXER(x+1, y, z)] : NULL;
+
+	curBlock->neighbors.above =  (y != CHUNK_HEIGHT-1) ? &chunk->blocks[CHUNK_BLOCK_INDEXER(x, y+1, z)] : NULL;
+	curBlock->neighbors.below =  (y != 0) ? &chunk->blocks[CHUNK_BLOCK_INDEXER(x, y-1, z)] : NULL;
+
+	curBlock->neighbors.front =  (z != 0) ? &chunk->blocks[CHUNK_BLOCK_INDEXER(x, y, z-1)] : NULL;
+	curBlock->neighbors.behind = (z != CHUNK_DEPTH-1) ? &chunk->blocks[CHUNK_BLOCK_INDEXER(x, y, z+1)] : NULL;
 	
 }
 
@@ -111,7 +112,7 @@ void SetChunkInnerBlocksInvisible(struct Chunk* chunk)
 			for (int x = 0; x < CHUNK_WIDTH; ++x)
 			{
 				// If it has neighbors in all direction, then it is inside
-				struct Block* cur = &chunk->blocks[CHUNK_INDEX(x,y,z)];
+				struct Block* cur = &chunk->blocks[CHUNK_BLOCK_INDEXER(x, y, z)];
 				if (
 					cur->neighbors.above &&
 					cur->neighbors.below &&
@@ -120,9 +121,10 @@ void SetChunkInnerBlocksInvisible(struct Chunk* chunk)
 					cur->neighbors.front &&
 					cur->neighbors.behind
 					)
-					chunk->blocks[CHUNK_INDEX(x, y, z)].props.isVisible = false;
+					cur->isVisible = false;
 			}
 }
+
 void CullBackFaces(struct Chunk* chunk)
 {
 	vec3s cameraPos = g_MainCamera.position;
@@ -135,41 +137,40 @@ void CullBackFaces(struct Chunk* chunk)
 		{
 			// Left
 			if (cameraPos.x > chunk->position.x + 0.5f)
-				chunk->blocks[CHUNK_INDEX(0,y,z)].props.isVisible = false;
+				chunk->blocks[CHUNK_BLOCK_INDEXER(0,y,z)].isVisible = false;
 			else
-				chunk->blocks[CHUNK_INDEX(0,y,z)].props.isVisible = true;
+				chunk->blocks[CHUNK_BLOCK_INDEXER(0,y,z)].isVisible = true;
 
 			// Right
 			if (cameraPos.x < chunk->position.x + CHUNK_WIDTH - 0.5f)
-				chunk->blocks[CHUNK_INDEX(CHUNK_WIDTH-1,y,z)].props.isVisible = false;
+				chunk->blocks[CHUNK_BLOCK_INDEXER(CHUNK_WIDTH-1,y,z)].isVisible = false;
 			else
-				chunk->blocks[CHUNK_INDEX(CHUNK_WIDTH-1,y,z)].props.isVisible = true;
+				chunk->blocks[CHUNK_BLOCK_INDEXER(CHUNK_WIDTH-1,y,z)].isVisible = true;
 
 			// Top
 			if (cameraPos.y < chunk->position.y + CHUNK_HEIGHT - 0.5f)
-				chunk->blocks[CHUNK_INDEX(x,CHUNK_HEIGHT-1,z)].props.isVisible = false;
+				chunk->blocks[CHUNK_BLOCK_INDEXER(x,CHUNK_HEIGHT-1,z)].isVisible = false;
 			else
-				chunk->blocks[CHUNK_INDEX(x,CHUNK_HEIGHT-1,z)].props.isVisible = true;
+				chunk->blocks[CHUNK_BLOCK_INDEXER(x,CHUNK_HEIGHT-1,z)].isVisible = true;
 						
 			// Bottom
 			if (cameraPos.y > chunk->position.y + 0.5f)
-				chunk->blocks[CHUNK_INDEX(x,0,z)].props.isVisible = false;
+				chunk->blocks[CHUNK_BLOCK_INDEXER(x,0,z)].isVisible = false;
 			else
-				chunk->blocks[CHUNK_INDEX(x,0,z)].props.isVisible = true;
+				chunk->blocks[CHUNK_BLOCK_INDEXER(x,0,z)].isVisible = true;
 			
 			// Back
 			if (cameraPos.z > chunk->position.z + 0.5f)
-				chunk->blocks[CHUNK_INDEX(x,y,0)].props.isVisible = false;
+				chunk->blocks[CHUNK_BLOCK_INDEXER(x,y,0)].isVisible = false;
 			else
-				chunk->blocks[CHUNK_INDEX(x,y,0)].props.isVisible = true;
+				chunk->blocks[CHUNK_BLOCK_INDEXER(x,y,0)].isVisible = true;
 
 			// Front
 			if (cameraPos.z < chunk->position.z + CHUNK_DEPTH - 0.5f)
-				chunk->blocks[CHUNK_INDEX(x,y,CHUNK_DEPTH-1)].props.isVisible = false;
+				chunk->blocks[CHUNK_BLOCK_INDEXER(x,y,CHUNK_DEPTH-1)].isVisible = false;
 			else
-				chunk->blocks[CHUNK_INDEX(x,y,CHUNK_DEPTH-1)].props.isVisible = true;
+				chunk->blocks[CHUNK_BLOCK_INDEXER(x,y,CHUNK_DEPTH-1)].isVisible = true;
 		}
 	}
 
 }
-#endif

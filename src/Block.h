@@ -14,6 +14,8 @@ struct Block
 	mat4s model;
 	enum BLOCK_TYPE type;
 
+	bool isVisible;
+
 	struct
 	{
 		struct Block* above;
