@@ -36,12 +36,9 @@ int main(void)
 	struct Buffer quad = CreateBufferVNA(quadVerts, sizeof(quadVerts));
 	mat4s quadModel = glms_translate(GLMS_MAT4_IDENTITY, (vec3s) { 0, 3, 0 });
 
-	vec3s* offsets = GetChunkOffsets();
-
-	struct Chunk chunks[5*5];
-	for (int z = 0; z < 5; ++z)
-		for (int x = 0; x < 5; ++x)
-			chunks[z*5 + x] = CreateChunk(&chunkShader, BLOCK_STONE, (vec3s) { x*CHUNK_WIDTH, 0, z*CHUNK_DEPTH }, offsets, CHUNK_WIDTH*CHUNK_HEIGHT*CHUNK_DEPTH);
+	struct Chunk chunk = CreateChunk(&chunkShader, BLOCK_DIRT, (vec3s) { 0, 0, 0 });
+	struct Chunk chunk2 = CreateChunk(&chunkShader, BLOCK_DIRT, (vec3s) { CHUNK_WIDTH, 0, 0 });
+	struct Chunk chunk3 = CreateChunk(&chunkShader, BLOCK_DIRT, (vec3s) { 0, 0, CHUNK_DEPTH });
 
 	glBindTexture(GL_TEXTURE_2D, g_SPRITE_SHEET.sheet.texObj);
 	while (GetGameShouldRun())
@@ -58,21 +55,25 @@ int main(void)
 		float pZ = g_MainCamera.position.z;
 
 		SunSet(sunMod);
+		DrawChunk(&chunk);
+		DrawChunk(&chunk2);
+		DrawChunk(&chunk3);
 
+#if 0
 		for (int z = 0; z < 5; ++z)
 			for (int x = 0; x < 5; ++x)
 			{
-				struct Chunk* curChunk = &chunks[z*5 + x];
+				struct Chunk_Instanced* curChunk = &chunks[z*5 + x];
 
 				if (glms_vec3_distance2(glms_vec3_add(curChunk->position, (vec3s){ CHUNK_WIDTH / 2, CHUNK_HEIGHT / 2, -CHUNK_DEPTH / 2 }), g_MainCamera.position) < dis)
-					DrawChunk(curChunk);
+					DrawChunk_Instanced(curChunk);
 				else
 				{
 					// replace chunk
 
 				}
 			}
-
+#endif
 		LOG("FPS: %.1f", 1 / DT);
 
 
@@ -81,7 +82,9 @@ int main(void)
 		glfwSwapBuffers(g_MainWindow.object);
 		glfwPollEvents();
 	}
-	free(offsets);
+	free(chunk.blocks);
+	free(chunk2.blocks);
+	free(chunk3.blocks);
 
 	KillGame();
 }

@@ -5,20 +5,30 @@
 #define CHUNK_HEIGHT 16
 #define CHUNK_DEPTH 16
 
+#define CHUNK_BLOCK_INDEXER(x,y,z) x + CHUNK_WIDTH * (y + CHUNK_DEPTH * z)
+
 #include "graphics/Buffer.h"
+#include "graphics/Shader.h"
+#include "Block.h"
+
+struct Chunk
+{
+	struct Block* blocks;
+	struct Shader* shader;
+	vec3s position;
+};
+
+struct Chunk CreateChunk(struct Shader* shader, enum BLOCK_TYPE blockType, vec3s position);
+void DrawChunk(struct Chunk* chunk);
 
 // Literally an instanced Block
-struct Chunk
+struct Chunk_Instanced
 {
 	struct Buffer_Instanced buffer;
 	struct Shader* shader;
 	vec3s position;
 	mat4s model;
 	enum BLOCK_TYPE type;
-
-	struct {
-		bool isVisible : 1;
-	} props;
 
 	struct
 	{
@@ -31,7 +41,7 @@ struct Chunk
 	} neighbors;
 };
 
-struct Chunk CreateChunk(struct Shader* shader, enum BLOCK_TYPE blockType, vec3s position, vec3s* offsets, u32 nOffsets);
-void DrawChunk(struct Chunk* chunk);
+struct Chunk_Instanced CreateChunk_Instanced(struct Shader* shader, enum BLOCK_TYPE blockType, vec3s position, vec3s* offsets, u32 nOffsets);
+void DrawChunk_Instanced(struct Chunk_Instanced* chunk);
 
 #endif // CHUNK_H

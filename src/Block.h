@@ -14,10 +14,6 @@ struct Block
 	mat4s model;
 	enum BLOCK_TYPE type;
 
-	struct {
-		bool isVisible: 1;
-	} props;
-	
 	struct
 	{
 		struct Block* above;
@@ -31,13 +27,15 @@ struct Block
 
 enum BLOCK_TYPE
 {
-	BLOCK_AIR, BLOCK_STONE,
+	BLOCK_AIR,
+	BLOCK_STONE,
 	BLOCK_DIRT,
 	BLOCK_WATER,
 	BLOCK_COAL
 };
 
 struct Block CreateBlock(struct Shader* shader, enum BLOCK_TYPE blockType, vec3s position);
+void SetBlockProperties(struct Block* block);
 void DrawBlock(struct Block* go);
 
 #endif // GAMEOBJECT_H

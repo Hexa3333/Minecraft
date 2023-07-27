@@ -23,9 +23,9 @@ vec3s* GetChunkOffsets()
 			for (int x = 0; x < CHUNK_WIDTH; ++x)
 			{
 				#define OFFSET(x,y,z) x + 16 * (y + 16 * z)
-				ret[OFFSET(x,y,z)].x = x;
-				ret[OFFSET(x,y,z)].y = y;
-				ret[OFFSET(x,y,z)].z = -z;
+				ret[OFFSET(x,y,z)].x = (float)x;
+				ret[OFFSET(x,y,z)].y = (float)y;
+				ret[OFFSET(x,y,z)].z = (float)-z;
 			}
 
 	return ret;
@@ -66,6 +66,22 @@ enum BLOCK_TEX_NAMES MapBlocksToTextures(enum BLOCK_TYPE blockType)
 			return TEX_AIR;
 	}
 }
+
+u8* ChunkFlattenIndex(u16 index)
+{
+	u8 z = index / (CHUNK_WIDTH * CHUNK_HEIGHT);
+	index -= (z * CHUNK_WIDTH * CHUNK_HEIGHT);
+	u8 y = index / CHUNK_WIDTH;
+	u8 x = index % CHUNK_WIDTH;
+
+	u8* ret = malloc(3 * sizeof(u8));
+	ret[0] = x;
+	ret[1] = y;
+	ret[2] = z;
+
+	return ret;
+}
+
 #if 0
 void SetNeighboringBlocks(struct Chunk* chunk, u8 blockIndexX, u8 blockIndexY, u8 blockIndexZ)
 {

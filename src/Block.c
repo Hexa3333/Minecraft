@@ -8,6 +8,7 @@ struct Block CreateBlock(struct Shader* shader, enum BLOCK_TYPE blockType, vec3s
 	float blockTextureUVs[6];
 	GetBlockTexture(blockTextureUVs, texName);
 
+#pragma region UVs
 	float uv_topX0 = blockTextureUVs[0] / g_SPRITE_SHEET.sheet.width;
 	float uv_topX1 = (blockTextureUVs[0] + g_SPRITE_SHEET.tileWidth) / g_SPRITE_SHEET.sheet.width;
 	float uv_topY0 = blockTextureUVs[1] / g_SPRITE_SHEET.sheet.width;
@@ -22,7 +23,8 @@ struct Block CreateBlock(struct Shader* shader, enum BLOCK_TYPE blockType, vec3s
 	float uv_bottomX1 = (blockTextureUVs[4] + g_SPRITE_SHEET.tileWidth) / g_SPRITE_SHEET.sheet.width;
 	float uv_bottomY0 = blockTextureUVs[5] / g_SPRITE_SHEET.sheet.height;
 	float uv_bottomY1 = (blockTextureUVs[5] + g_SPRITE_SHEET.tileHeight) / g_SPRITE_SHEET.sheet.height;
-	
+#pragma endregion
+
 	float cubeVertices[] = {
 		// VERTICES				UVs						NORMALS
 	    // Back face
@@ -78,6 +80,14 @@ struct Block CreateBlock(struct Shader* shader, enum BLOCK_TYPE blockType, vec3s
 	memset(&ret.neighbors, 0, 6*sizeof(struct Block*));
 
 	return ret;
+}
+
+void SetBlockProperties(struct Block* block)
+{
+	switch (block->type)
+	{
+
+	}
 }
 
 void DrawBlock(struct Block* go)
