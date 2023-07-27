@@ -30,13 +30,15 @@ static void KeyInput();
 int main(void)
 {
 	InitGame("Minecraft", 720, 720);
-	struct Shader quadShader = CreateShaderVF("res/Shaders/quadV.glsl", "res/Shaders/quadF.glsl");
 	struct Shader chunkShader = CreateShaderVF("res/Shaders/ChunkV.glsl", "res/Shaders/ChunkF.glsl");
-	
-	struct Buffer quad = CreateBufferVNA(quadVerts, sizeof(quadVerts));
-	mat4s quadModel = glms_translate(GLMS_MAT4_IDENTITY, (vec3s) { 0, 3, 0 });
 
 	struct Chunk chunk = CreateChunk(&chunkShader, BLOCK_DIRT, (vec3s) { 0, 0, 0 });
+	WriteChunk(&chunk);
+
+	chunk.blocks[CHUNK_BLOCK_INDEXER(1, 0, 0)].type = BLOCK_COAL;
+	chunk.blocks[CHUNK_BLOCK_INDEXER(2, 0, 0)].type = BLOCK_WATER;
+	ModifyChunk(&chunk, 1, 0, 0);
+	ModifyChunk(&chunk, 2, 0, 0);
 
 	glBindTexture(GL_TEXTURE_2D, g_SPRITE_SHEET.sheet.texObj);
 	while (GetGameShouldRun())
@@ -70,8 +72,6 @@ int main(void)
 				}
 			}
 #endif
-		LOG("FPS: %.1f", 1 / DT);
-
 
 		if (glfwGetKey(g_MainWindow.object, GLFW_KEY_ESCAPE)) break;
 

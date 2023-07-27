@@ -22,10 +22,9 @@ vec3s* GetChunkOffsets()
 		for (int z = 0; z < CHUNK_DEPTH; ++z)
 			for (int x = 0; x < CHUNK_WIDTH; ++x)
 			{
-				#define OFFSET(x,y,z) x + 16 * (y + 16 * z)
-				ret[OFFSET(x,y,z)].x = (float)x;
-				ret[OFFSET(x,y,z)].y = (float)y;
-				ret[OFFSET(x,y,z)].z = (float)-z;
+				ret[CHUNK_BLOCK_INDEXER(x,y,z)].x = (float)x;
+				ret[CHUNK_BLOCK_INDEXER(x,y,z)].y = (float)y;
+				ret[CHUNK_BLOCK_INDEXER(x,y,z)].z = (float)-z;
 			}
 
 	return ret;

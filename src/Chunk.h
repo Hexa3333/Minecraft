@@ -2,7 +2,7 @@
 #define CHUNK_H
 
 #define CHUNK_WIDTH 16
-#define CHUNK_HEIGHT 16
+#define CHUNK_HEIGHT 48
 #define CHUNK_DEPTH 16
 
 #define CHUNK_BLOCK_INDEXER(x,y,z) x + CHUNK_WIDTH * (y + CHUNK_DEPTH * z)
@@ -43,5 +43,12 @@ struct Chunk_Instanced
 
 struct Chunk_Instanced CreateChunk_Instanced(struct Shader* shader, enum BLOCK_TYPE blockType, vec3s position, vec3s* offsets, u32 nOffsets);
 void DrawChunk_Instanced(struct Chunk_Instanced* chunk);
+
+// IO
+char* GetChunkFileName(struct Chunk* chunk);
+char* GetChunkFilePath(struct Chunk* chunk);
+
+void WriteChunk(struct Chunk* chunk);
+void ModifyChunk(struct Chunk* chunk, u8 x, u8 y, u8 z);
 
 #endif // CHUNK_H

@@ -86,7 +86,7 @@ struct Chunk CreateChunk(struct Shader* shader, enum BLOCK_TYPE blockType, vec3s
 		ret.blocks[CHUNK_BLOCK_INDEXER(x,y,z)].shader = ret.shader;
 		ret.blocks[CHUNK_BLOCK_INDEXER(x,y,z)].position = (vec3s){ position.x + x, position.y + y, position.z + z };
 		ret.blocks[CHUNK_BLOCK_INDEXER(x,y,z)].model = glms_translate(GLMS_MAT4_IDENTITY, ret.blocks[CHUNK_BLOCK_INDEXER(x, y, z)].position);
-		ret.blocks[CHUNK_BLOCK_INDEXER(x,y,z)].type = BLOCK_DIRT;
+		ret.blocks[CHUNK_BLOCK_INDEXER(x,y,z)].type = blockType;
 		ret.blocks[CHUNK_BLOCK_INDEXER(x, y, z)].isVisible = true;
 		memset(&ret.blocks[CHUNK_BLOCK_INDEXER(x, y, z)].neighbors, 0, 6 * sizeof(struct Block*));
 	}
@@ -202,4 +202,98 @@ void DrawChunk_Instanced(struct Chunk_Instanced* chunk)
 	SendUniformMat4(chunk->shader, "view", &g_View);
 	SendUniformMat4(chunk->shader, "projection", &g_Projection);
 	DrawBufferA_Instanced(&chunk->buffer);
+}
+
+
+char* GetChunkFileName(struct Chunk* chunk)
+{
+	u32 x = chunk->position.x / CHUNK_WIDTH;
+	u32 z = chunk->position.z / CHUNK_DEPTH;
+
+	u8 xFigures = 1;
+	u8 zFigures = 1;
+
+	u32 xBak = x;
+	u32 zBak = z;
+	while (x /= 10) ++xFigures;
+	while (z /= 10) ++zFigures;
+
+	x = xBak;
+	z = zBak;
+
+	// 7: c h u n k _ _
+	char* name = malloc(7 + xFigures + zFigures + 1);
+
+	char x_Str[7];
+	char z_Str[7];
+	sprintf(x_Str, "%u", x);
+	sprintf(z_Str, "%u", z);
+
+	sprintf(name, "chunk_%s_%s", x_Str, z_Str);
+
+	return name;
+}
+
+char* GetChunkFilePath(struct Chunk* chunk)
+{
+	static char* folder = "GameData/";
+	char* fileName = GetChunkFileName(chunk);
+
+	char* path = malloc(strlen(fileName) + strlen(folder) + 1);
+	strcpy(path, folder);
+	strcpy(path + strlen(folder), fileName);
+
+	free(fileName);
+
+	return path;
+}
+
+void WriteChunk(struct Chunk* chunk)
+{
+	static char* ChunksFolder = "GameData/";
+
+	u32 x = chunk->position.x / CHUNK_WIDTH;
+	u32 z = chunk->position.z / CHUNK_DEPTH;
+
+	char* name = GetChunkFileName(chunk);
+	u8 nameLen = strlen(name);
+
+
+	char* filePath = GetChunkFilePath(chunk);
+	FILE* fp = fopen(filePath, "wb");
+	if (!fp)
+	{
+		ERR("Failed to save chunk: %s", name);
+		return;
+	}
+
+	enum BLOCK_TYPE blockBuffer[CHUNK_WIDTH * CHUNK_HEIGHT * CHUNK_DEPTH];
+	for (int i = 0; i < CHUNK_WIDTH * CHUNK_HEIGHT * CHUNK_DEPTH; ++i)
+	{
+		blockBuffer[i] = chunk->blocks[i].type;
+	}
+
+	fwrite(blockBuffer, 1, CHUNK_WIDTH * CHUNK_HEIGHT * CHUNK_DEPTH, fp);
+
+
+	fclose(fp);
+	free(filePath);
+}
+
+void ModifyChunk(struct Chunk* chunk, u8 x, u8 y, u8 z)
+{
+	char* path = GetChunkFilePath(chunk);
+
+	FILE* fp = fopen(path, "rb+");
+	if (!fp)
+	{
+		ERR("Failed to open a file: %s", path);
+		return;
+	}
+
+	fseek(fp, (CHUNK_BLOCK_INDEXER(x, y, z)) * sizeof(enum BLOCK_TYPE), SEEK_SET);
+	fwrite(&chunk->blocks[CHUNK_BLOCK_INDEXER(x, y, z)].type, sizeof(enum BLOCK_TYPE), 1, fp);
+
+	fclose(fp);
+	free(path);
 }
