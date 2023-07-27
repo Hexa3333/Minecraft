@@ -2,7 +2,7 @@
 #define CHUNK_H
 
 #define CHUNK_WIDTH 16
-#define CHUNK_HEIGHT 48
+#define CHUNK_HEIGHT 16
 #define CHUNK_DEPTH 16
 
 #define CHUNK_BLOCK_INDEXER(x,y,z) x + CHUNK_WIDTH * (y + CHUNK_DEPTH * z)
