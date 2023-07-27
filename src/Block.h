@@ -1,18 +1,14 @@
 #ifndef GAMEOBJECT_H
 #define GAMEOBJECT_H
 
-#include "Buffer.h"
-#include "Shader.h"
-#include "Sprite.h"
+#include "graphics/Buffer.h"
+#include "graphics/Shader.h"
+#include "graphics/Sprite.h"
 #include <cglm/struct.h>
-
-#define CHUNK_WIDTH 16
-#define CHUNK_HEIGHT 16
-#define CHUNK_DEPTH 16
 
 struct Block
 {
-	struct Buffer_Instanced buffer;
+	struct Buffer buffer;
 	struct Shader* shader;
 	vec3s position;
 	mat4s model;
@@ -42,8 +38,6 @@ enum BLOCK_TYPE
 };
 
 struct Block CreateBlock(struct Shader* shader, enum BLOCK_TYPE blockType, vec3s position);
-struct Block CreateChunk(struct Shader* shader, enum BLOCK_TYPE blockType, vec3s position, vec3s* offsets, u32 nOffsets);
 void DrawBlock(struct Block* go);
-void DrawChunk(struct Block* chunk);
 
 #endif // GAMEOBJECT_H

@@ -127,9 +127,10 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\AdditionalRendering.c" />
+    <ClCompile Include="src\Chunk.c" />
     <ClCompile Include="src\Game.c" />
     <ClCompile Include="src\glad.c" />
-    <ClCompile Include="src\graphics\Block.c" />
+    <ClCompile Include="src\Block.c" />
     <ClCompile Include="src\graphics\Buffer.c" />
     <ClCompile Include="src\graphics\Camera.c" />
     <ClCompile Include="src\graphics\Light.c" />
@@ -144,9 +145,10 @@
   <ItemGroup>
     <ClInclude Include="glad\glad.h" />
     <ClInclude Include="src\AdditionalRendering.h" />
+    <ClInclude Include="src\Chunk.h" />
     <ClInclude Include="src\common.h" />
     <ClInclude Include="src\Game.h" />
-    <ClInclude Include="src\graphics\Block.h" />
+    <ClInclude Include="src\Block.h" />
     <ClInclude Include="src\graphics\Buffer.h" />
     <ClInclude Include="src\graphics\Camera.h" />
     <ClInclude Include="src\graphics\Light.h" />

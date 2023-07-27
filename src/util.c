@@ -1,7 +1,8 @@
 #include "util.h"
 #include "graphics/Camera.h"
 #include "graphics/Sprite.h"
-#include "graphics/Block.h"
+#include "Chunk.h"
+#include "Block.h"
 
 // out: 12 floats
 void CreateLine(float* out, vec3s start, vec3s end, vec3s color)
@@ -17,14 +18,14 @@ void CreateLine(float* out, vec3s start, vec3s end, vec3s color)
 vec3s* GetChunkOffsets()
 {
 	vec3s* ret = malloc(CHUNK_WIDTH * CHUNK_HEIGHT * CHUNK_DEPTH * sizeof(vec3s));
-	for (int y = 0; y < 16; ++y)
-		for (int z = 0; z < 16; ++z)
-			for (int x = 0; x < 16; ++x)
+	for (int y = 0; y < CHUNK_HEIGHT; ++y)
+		for (int z = 0; z < CHUNK_DEPTH; ++z)
+			for (int x = 0; x < CHUNK_WIDTH; ++x)
 			{
-				vec3s* offset = &ret[x + 16 * (y + 16 * z)];
-				offset->x = x;
-				offset->y = y;
-				offset->z = z;
+				#define OFFSET(x,y,z) x + 16 * (y + 16 * z)
+				ret[OFFSET(x,y,z)].x = x;
+				ret[OFFSET(x,y,z)].y = y;
+				ret[OFFSET(x,y,z)].z = -z;
 			}
 
 	return ret;

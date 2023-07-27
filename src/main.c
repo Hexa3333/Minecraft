@@ -7,7 +7,8 @@
 #include "Time.h"
 #include "Game.h"
 #include "util.h"
-#include "graphics/Block.h"
+#include "Block.h"
+#include "Chunk.h"
 #include "graphics/Camera.h"
 #include "graphics/Shader.h"
 #include "graphics/Light.h"
@@ -23,7 +24,7 @@ float quadVerts[] = {
 	-0.5f, -0.5f, 0.0f,		0, 0, 1 // sol alt
 };
 
-
+static float dis = 1000.f;
 float sunMod = 1.0f;
 static void KeyInput();
 int main(void)
@@ -35,7 +36,12 @@ int main(void)
 	struct Buffer quad = CreateBufferVNA(quadVerts, sizeof(quadVerts));
 	mat4s quadModel = glms_translate(GLMS_MAT4_IDENTITY, (vec3s) { 0, 3, 0 });
 
-	struct Block block = CreateBlock(&chunkShader, BLOCK_STONE, (vec3s) { 0, 0, 0 });
+	vec3s* offsets = GetChunkOffsets();
+
+	struct Chunk chunks[5*5];
+	for (int z = 0; z < 5; ++z)
+		for (int x = 0; x < 5; ++x)
+			chunks[z*5 + x] = CreateChunk(&chunkShader, BLOCK_STONE, (vec3s) { x*CHUNK_WIDTH, 0, z*CHUNK_DEPTH }, offsets, CHUNK_WIDTH*CHUNK_HEIGHT*CHUNK_DEPTH);
 
 	glBindTexture(GL_TEXTURE_2D, g_SPRITE_SHEET.sheet.texObj);
 	while (GetGameShouldRun())
@@ -52,16 +58,30 @@ int main(void)
 		float pZ = g_MainCamera.position.z;
 
 		SunSet(sunMod);
-		DebugDrawLine(&block);
 
-		DrawBlock(&block);
+		for (int z = 0; z < 5; ++z)
+			for (int x = 0; x < 5; ++x)
+			{
+				struct Chunk* curChunk = &chunks[z*5 + x];
+
+				if (glms_vec3_distance2(glms_vec3_add(curChunk->position, (vec3s){ CHUNK_WIDTH / 2, CHUNK_HEIGHT / 2, -CHUNK_DEPTH / 2 }), g_MainCamera.position) < dis)
+					DrawChunk(curChunk);
+				else
+				{
+					// replace chunk
+
+				}
+			}
+
+		LOG("FPS: %.1f", 1 / DT);
+
 
 		if (glfwGetKey(g_MainWindow.object, GLFW_KEY_ESCAPE)) break;
 
 		glfwSwapBuffers(g_MainWindow.object);
 		glfwPollEvents();
 	}
-
+	free(offsets);
 
 	KillGame();
 }
@@ -85,6 +105,18 @@ void KeyInput()
 			g_MainCamera.position.y -= 25.0f * DT;
 		if (glfwGetKey(g_MainWindow.object, GLFW_KEY_SPACE))
 			g_MainCamera.position.y += 25.0f * DT;
+
+		if (glfwGetKey(g_MainWindow.object, GLFW_KEY_L))
+		{
+			dis -= 100.f;
+			LOG("Render Dist: %.1f", dis);
+		}
+		if (glfwGetKey(g_MainWindow.object, GLFW_KEY_I))
+		{
+			dis += 100.f;
+			LOG("Render Dist: %.1f", dis);
+		}
+
 
 		if (glfwGetKey(g_MainWindow.object, GLFW_KEY_F))
 			glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);

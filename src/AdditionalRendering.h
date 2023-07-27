@@ -2,7 +2,7 @@
 #define ADDITIONAL_RENDERING_H
 
 #include "graphics/Buffer.h"
-#include "graphics/Block.h"
+#include "Block.h"
 #include <cglm/struct.h>
 
 struct AdditionalRenderable
