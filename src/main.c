@@ -36,8 +36,6 @@ int main(void)
 	struct Buffer quadBuf = CreateBufferVNA(quadVerts, sizeof(quadVerts));
 
 	struct Chunk chunk = CreateChunk(&chunkShader, (vec3s) { 0, 0, 0 });
-	chunk.blocks[CHUNK_BLOCK_INDEXER(0, 0, 0)].type = BLOCK_DIRT;
-	UpdateChunk(&chunk);
 
 	float t = 0; bool tIncreasing = true;
 	vec3s quadPos = { 0, -1, 0 };
@@ -110,7 +108,7 @@ int main(void)
 void KeyInput()
 {
 		vec3s direction = glms_vec3_cross(g_MainCamera.front, g_MainCamera.up);
-		vec3s moveSpeed = {10.0f * DT, 10.0f * DT, 10.0f * DT};
+		vec3s moveSpeed = {20.0f * DT, 20.0f * DT, 20.0f * DT};
 
 		if (glfwGetKey(g_MainWindow.object, GLFW_KEY_W))
 			g_MainCamera.position = glms_vec3_add(g_MainCamera.position, glms_vec3_mul(g_MainCamera.front, moveSpeed));
@@ -123,9 +121,9 @@ void KeyInput()
 			g_MainCamera.position = glms_vec3_sub(g_MainCamera.position, glms_vec3_mul(direction, moveSpeed));
 
 		if (glfwGetKey(g_MainWindow.object, GLFW_KEY_LEFT_CONTROL))
-			g_MainCamera.position.y -= 5.0f * DT;
+			g_MainCamera.position.y -= 15.0f * DT;
 		if (glfwGetKey(g_MainWindow.object, GLFW_KEY_SPACE))
-			g_MainCamera.position.y += 5.0f * DT;
+			g_MainCamera.position.y += 15.0f * DT;
 
 		if (glfwGetKey(g_MainWindow.object, GLFW_KEY_L))
 		{
