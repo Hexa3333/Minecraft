@@ -13,6 +13,7 @@
 #include "graphics/Shader.h"
 #include "graphics/Light.h"
 #include "AdditionalRendering.h"
+#include "Ray.h"
 
 float quadVerts[] = {
 	-0.1f, -0.1f, 0.0f,		0, 0, 1, // sol alt
@@ -71,25 +72,8 @@ int main(void)
 		SendUniformMat4(&quadShader, "projection", &g_Projection);
 		DrawBufferA(&quadBuf);
 
-		vec3s p = glms_vec3_add(g_MainCamera.position, g_MainCamera.front);
-		for (int i = 0; i < 400; ++i)
-		{
-			if (//glms_vec3_distance2(g_MainCamera.position, p) < 1000 &&
-				p.x > block.position.x + 0.5f && p.x < block.position.x + 1.5f &&
-				p.y > block.position.y + 0.5f && p.y < block.position.y + 1.5f
-				//p.z > block.position.z - 1.5f && p.z < block.position.z - 0.5f
-				)
-			{
-				LOG("INTERSECTION!");
-			}
-
-			p = glms_vec3_add(p, glms_vec3_divs(g_MainCamera.front, 4));
-
-		}
-
-		vec3s normed = glms_vec3_normalize(g_MainCamera.front);
-		//LOG("Front = [%.1f, %.1f, %.1f]", g_MainCamera.front.x, g_MainCamera.front.y, g_MainCamera.front.z);
-		//LOG("Norm(Front) = [%.1f, %.1f, %.1f]", normed.x, normed.y, normed.z);
+		CastRay3D(block.position);
+		
 
 #if 0
 		for (int z = 0; z < 5; ++z)

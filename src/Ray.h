@@ -2,9 +2,7 @@
 #define RAY_H
 
 #include <cglm/struct.h>
-#include "graphics/Camera.h"
 
-
-void CastRay(vec3s direction, vec3s normal);
+void CastRay3D(vec3s caste);
 
 #endif // RAY_H
