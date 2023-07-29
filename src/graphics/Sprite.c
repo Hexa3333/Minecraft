@@ -41,6 +41,24 @@ void BuildSpriteSheet(const char* path, enum ImageType imgType, float tileCountX
 	g_SPRITE_SHEET.tileHeight = g_SPRITE_SHEET.sheet.height / tileCountY;
 }
 
+float* GetSpriteXYFromSheet(u8 tileIndexX, u8 tileIndexY)
+{
+	float x = g_SPRITE_SHEET.tileWidth * (tileIndexX - 1);
+	float y = g_SPRITE_SHEET.sheet.height - (g_SPRITE_SHEET.tileHeight * tileIndexY); // y is flipped
+	float* ret = malloc(2 * sizeof(float));
+	if (ret)
+	{
+		ret[0] = x;
+		ret[1] = y;
+		return ret;
+	}
+	else
+	{
+		ERR("Malloc failed at: %i", __LINE__);
+		return NULL;
+	}
+}
+
 void GetBlockTexture(float* arr, enum BLOCK_TEX_NAMES texName)
 {
 	static float BlockTextureIndexes[5][6] =

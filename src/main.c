@@ -16,12 +16,12 @@
 #include "Ray.h"
 
 float quadVerts[] = {
-	-0.1f, -0.1f, 0.0f,		0, 0, 1, // sol alt
-	0.1f, -0.1f, 0.0f,		0, 0, 1, // sag alt
-	0.1f, 0.1f, 0.0f,		0, 0, 1, // sag ust
+	-0.1f, -0.1f, 0.0f,		0, 0, 1,  // sol alt
+	0.1f, -0.1f, 0.0f,		0, 0, 1,  // sag alt
+	0.1f, 0.1f, 0.0f,		0, 0, 1,  // sag ust
 
-	0.1f, 0.1f, 0.0f,		0, 0, 1, // sag ust
-	-0.1f, 0.1f, 0.0f,		0, 0, 1, // sol ust
+	0.1f, 0.1f, 0.0f,		0, 0, 1,  // sag ust
+	-0.1f, 0.1f, 0.0f,		0, 0, 1,  // sol ust
 	-0.1f, -0.1f, 0.0f,		0, 0, 1 // sol alt
 };
 
@@ -59,6 +59,7 @@ int main(void)
 
 		quadPos = glms_vec3_lerp((vec3s) { 0, -1, 0 }, (vec3s) { CHUNK_WIDTH, -1, 0 }, t);
 		mat4s quaddraw = glms_translate(GLMS_MAT4_IDENTITY, quadPos);
+
 		UseShader(&quadShader);
 		SendUniformMat4(&quadShader, "model", &quaddraw);
 		SendUniformMat4(&quadShader, "view", &g_View);

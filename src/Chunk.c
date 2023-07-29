@@ -16,10 +16,7 @@ struct Chunk CreateChunk(struct Shader* shader, vec3s position)
 		for (int z = 0; z < CHUNK_DEPTH; ++z)
 			for (int x = 0; x < CHUNK_WIDTH; ++x)
 	{
-		if (y > 10)
-			ret.blocks[CHUNK_BLOCK_INDEXER(x, y, z)] = CreateBlock(shader, BLOCK_DIRT, (vec3s) { position.x + x, position.y + y, position.z + z });
-		else
-			ret.blocks[CHUNK_BLOCK_INDEXER(x, y, z)] = CreateBlock(shader, BLOCK_STONE, (vec3s) { position.x + x, position.y + y, position.z + z });
+		ret.blocks[CHUNK_BLOCK_INDEXER(x, y, z)] = CreateBlock(shader, BLOCK_STONE, (vec3s) { position.x + x, position.y + y, position.z + z });
 	}
 
 	SetNeighboringBlocksOfChunk(&ret);
