@@ -7,6 +7,10 @@ void CastRay3D(vec3s caste)
 	vec3s p = glms_vec3_add(g_MainCamera.position, g_MainCamera.front);
 	for (int i = 0; i < 100; ++i)
 	{
+		// NOTE:
+		// The block vertices go from -.5f to +.5f,
+		// meaning x,y,z points to the middle of the block,
+		// therefore we offset them.
 		if (glms_vec3_distance2(g_MainCamera.position, p) < 1000 &&
 			p.x > caste.x - 0.5f && p.x < caste.x + 0.5f &&
 			p.y > caste.y - 0.5f && p.y < caste.y + 0.5f &&
