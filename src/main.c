@@ -36,7 +36,8 @@ int main(void)
 	struct Buffer quadBuf = CreateBufferVNA(quadVerts, sizeof(quadVerts));
 
 	struct Chunk chunk = CreateChunk(&chunkShader, (vec3s) { 0, 0, 0 });
-	WriteChunk(&chunk);
+	chunk.blocks[CHUNK_BLOCK_INDEXER(0, 0, 0)].type = BLOCK_DIRT;
+	UpdateChunk(&chunk);
 
 	float t = 0; bool tIncreasing = true;
 	vec3s quadPos = { 0, -1, 0 };

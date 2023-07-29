@@ -61,6 +61,7 @@ struct Block CreateBlock(struct Shader* shader, enum BLOCK_TYPE blockType, vec3s
 	ret.position = position;
 	ret.model = glms_translate(GLMS_MAT4_IDENTITY, ret.position);
 	ret.type = blockType;
+	ret.isVisible = true;
 	memset(&ret.neighbors, 0, 6*sizeof(struct Block*));
 
 	return ret;

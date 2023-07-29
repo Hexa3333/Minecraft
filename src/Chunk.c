@@ -8,55 +8,6 @@ struct Chunk CreateChunk(struct Shader* shader, vec3s position)
 {
 	enum BLOCK_TEX_NAMES texName = MapBlocksToTextures(BLOCK_STONE);
 
-	float UVs[12];
-	CalculateUVsOfBlock(UVs, texName);
-
-	float cubeVertices[] = {
-		// VERTICES				UVs						NORMALS
-		// Back face
-		-0.5f, -0.5f, -0.5f,  UVs[4], UVs[6], 0.0f, 0.0f, -1.0f, // bottom left far
-		 0.5f,  0.5f, -0.5f,  UVs[5], UVs[7], 0.0f, 0.0f, -1.0f, // top right far
-		 0.5f, -0.5f, -0.5f,  UVs[5], UVs[6], 0.0f, 0.0f, -1.0f, // bottom right far
-		 0.5f,  0.5f, -0.5f,  UVs[5], UVs[7], 0.0f, 0.0f, -1.0f, // bottom right far
-		-0.5f, -0.5f, -0.5f,  UVs[4], UVs[6], 0.0f, 0.0f, -1.0f, // bottom left far
-		-0.5f,  0.5f, -0.5f,  UVs[4], UVs[7], 0.0f, 0.0f, -1.0f, // top left far
-		// Front face
-		-0.5f, -0.5f,  0.5f,  UVs[4], UVs[6], 0.0f, 0.0f, 1.0f, // bottom left near
-		 0.5f, -0.5f,  0.5f,  UVs[5], UVs[6], 0.0f, 0.0f, 1.0f, // bottom right near
-		 0.5f,  0.5f,  0.5f,  UVs[5], UVs[7], 0.0f, 0.0f, 1.0f, // top right near
-		 0.5f,  0.5f,  0.5f,  UVs[5], UVs[7], 0.0f, 0.0f, 1.0f, // top right near
-		-0.5f,  0.5f,  0.5f,  UVs[4], UVs[7], 0.0f, 0.0f, 1.0f, // top left near
-		-0.5f, -0.5f,  0.5f,  UVs[4], UVs[6], 0.0f, 0.0f, 1.0f, // bottom left near
-		// Left face
-		-0.5f,  0.5f,  0.5f,  UVs[5], UVs[7], -1.0f, 0.0f, 0.0f, // top lef near
-		-0.5f,  0.5f, -0.5f,  UVs[4], UVs[7], -1.0f, 0.0f, 0.0f, // top left far
-		-0.5f, -0.5f, -0.5f,  UVs[4], UVs[6], -1.0f, 0.0f, 0.0f, // bottom left far
-		-0.5f, -0.5f, -0.5f,  UVs[4], UVs[6], -1.0f, 0.0f, 0.0f, // bottom left far
-		-0.5f, -0.5f,  0.5f,  UVs[5], UVs[6], -1.0f, 0.0f, 0.0f, // bottom left near
-		-0.5f,  0.5f,  0.5f,  UVs[5], UVs[7], -1.0f, 0.0f, 0.0f, // top left near
-		// Right face
-		 0.5f,  0.5f,  0.5f,  UVs[4], UVs[7],	1.0f, 0.0f, 0.0f, // top right near
-		 0.5f, -0.5f, -0.5f,  UVs[5], UVs[6],	1.0f, 0.0f, 0.0f, // bottom right far
-		 0.5f,  0.5f, -0.5f,  UVs[5], UVs[7],	1.0f, 0.0f, 0.0f, // top right far
-		 0.5f, -0.5f, -0.5f,  UVs[5], UVs[6],	1.0f, 0.0f, 0.0f, // bottom right far
-		 0.5f,  0.5f,  0.5f,  UVs[4], UVs[7],	1.0f, 0.0f, 0.0f, // top right far
-		 0.5f, -0.5f,  0.5f,  UVs[4], UVs[6],	1.0f, 0.0f, 0.0f, // bottom right far 
-		 // Bottom face
-		 -0.5f, -0.5f, -0.5f,  UVs[9], UVs[11], 0.0f, -1.0f, 0.0f, // bottom left far
-		  0.5f, -0.5f, -0.5f,  UVs[8], UVs[11], 0.0f, -1.0f, 0.0f, // bottom right far
-		  0.5f, -0.5f,  0.5f,  UVs[8], UVs[10], 0.0f, -1.0f, 0.0f, // bottom right near
-		  0.5f, -0.5f,  0.5f,  UVs[8], UVs[10], 0.0f, -1.0f, 0.0f, // bottom right near
-		 -0.5f, -0.5f,  0.5f,  UVs[9], UVs[10], 0.0f, -1.0f, 0.0f, // bottom left near
-		 -0.5f, -0.5f, -0.5f,  UVs[9], UVs[11], 0.0f, -1.0f, 0.0f, // bottom left far
-		 // Top face
-		 -0.5f,  0.5f, -0.5f,  UVs[0], UVs[3], 0.0f, 1.0f, 0.0f, // top left far
-		  0.5f,  0.5f,  0.5f,  UVs[1], UVs[2], 0.0f, 1.0f, 0.0f, // top right near
-		  0.5f,  0.5f, -0.5f,  UVs[1], UVs[3], 0.0f, 1.0f, 0.0f, // top right far
-		  0.5f,  0.5f,  0.5f,  UVs[1], UVs[2], 0.0f, 1.0f, 0.0f, // top right near
-		 -0.5f,  0.5f, -0.5f,  UVs[0], UVs[3], 0.0f, 1.0f, 0.0f, // top left far
-		 -0.5f,  0.5f,  0.5f,  UVs[0], UVs[2], 0.0f, 1.0f, 0.0f // top left near
-	};
-
 	struct Chunk ret = { 0 };
 	ret.shader = shader;
 	ret.position = position;
@@ -66,19 +17,24 @@ struct Chunk CreateChunk(struct Shader* shader, vec3s position)
 		for (int z = 0; z < CHUNK_DEPTH; ++z)
 			for (int x = 0; x < CHUNK_WIDTH; ++x)
 	{
-		ret.blocks[CHUNK_BLOCK_INDEXER(x,y,z)].buffer = CreateBufferVTNA(cubeVertices, sizeof(cubeVertices));
-		ret.blocks[CHUNK_BLOCK_INDEXER(x,y,z)].shader = ret.shader;
-		ret.blocks[CHUNK_BLOCK_INDEXER(x,y,z)].position = (vec3s){ position.x + x, position.y + y, position.z + z };
-		ret.blocks[CHUNK_BLOCK_INDEXER(x,y,z)].model = glms_translate(GLMS_MAT4_IDENTITY, ret.blocks[CHUNK_BLOCK_INDEXER(x, y, z)].position);
-		ret.blocks[CHUNK_BLOCK_INDEXER(x,y,z)].type = BLOCK_STONE;
-		ret.blocks[CHUNK_BLOCK_INDEXER(x, y, z)].isVisible = true;
-		memset(&ret.blocks[CHUNK_BLOCK_INDEXER(x, y, z)].neighbors, 0, 6 * sizeof(struct Block*));
+		ret.blocks[CHUNK_BLOCK_INDEXER(x, y, z)] = CreateBlock(shader, BLOCK_STONE, (vec3s) { position.x + x, position.y + y, position.z + z });
 	}
 
 	SetNeighboringBlocksOfChunk(&ret);
 	SetChunkInnerBlocksInvisible(&ret);
 
 	return ret;
+}
+
+void UpdateChunk(struct Chunk* chunk)
+{
+	for (int y = 0; y < CHUNK_HEIGHT; ++y)
+		for (int z = 0; z < CHUNK_DEPTH; ++z)
+			for (int x = 0; x < CHUNK_WIDTH; ++x)
+	{
+				if (chunk->blocks[CHUNK_BLOCK_INDEXER(x, y, z)].type != BLOCK_STONE)
+					chunk->blocks[CHUNK_BLOCK_INDEXER(x, y, z)] = CreateBlock(chunk->shader, chunk->blocks[CHUNK_BLOCK_INDEXER(x, y, z)].type, chunk->blocks[CHUNK_BLOCK_INDEXER(x, y, z)].position);
+	}
 }
 
 void DrawChunk(struct Chunk* chunk)
@@ -90,12 +46,7 @@ void DrawChunk(struct Chunk* chunk)
 	{
 		if (chunk->blocks[CHUNK_BLOCK_INDEXER(x, y, z)].isVisible)
 		{
-			UseShader(chunk->shader);
-			SendSun(chunk->shader);
-			SendUniformMat4(chunk->shader, "model", &chunk->blocks[CHUNK_BLOCK_INDEXER(x, y, z)].model);
-			SendUniformMat4(chunk->shader, "view", &g_View);
-			SendUniformMat4(chunk->shader, "projection", &g_Projection);
-			DrawBufferA(&chunk->blocks->buffer);
+			DrawBlock(&chunk->blocks[CHUNK_BLOCK_INDEXER(x, y, z)]);
 		}
 	}
 }

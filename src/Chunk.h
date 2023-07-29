@@ -19,6 +19,7 @@ struct Chunk
 };
 
 struct Chunk CreateChunk(struct Shader* shader, vec3s position);
+void UpdateChunk(struct Chunk* chunk);
 void DrawChunk(struct Chunk* chunk);
 
 // Literally an instanced Block
