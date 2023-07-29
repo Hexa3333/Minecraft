@@ -18,7 +18,7 @@ struct Chunk
 	vec3s position;
 };
 
-struct Chunk CreateChunk(struct Shader* shader, enum BLOCK_TYPE blockType, vec3s position);
+struct Chunk CreateChunk(struct Shader* shader, vec3s position);
 void DrawChunk(struct Chunk* chunk);
 
 // Literally an instanced Block

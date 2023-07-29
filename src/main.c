@@ -35,17 +35,11 @@ int main(void)
 	struct Shader quadShader = CreateShaderVF("res/Shaders/QuadV.glsl", "res/Shaders/QuadF.glsl");
 	struct Buffer quadBuf = CreateBufferVNA(quadVerts, sizeof(quadVerts));
 
-	struct Chunk chunk = CreateChunk(&chunkShader, BLOCK_DIRT, (vec3s) { 0, 0, 0 });
+	struct Chunk chunk = CreateChunk(&chunkShader, (vec3s) { 0, 0, 0 });
 	WriteChunk(&chunk);
 
-	chunk.blocks[CHUNK_BLOCK_INDEXER(1, 0, 0)].type = BLOCK_COAL;
-	chunk.blocks[CHUNK_BLOCK_INDEXER(2, 0, 0)].type = BLOCK_WATER;
-	ModifyChunk(&chunk, 1, 0, 0);
-	ModifyChunk(&chunk, 2, 0, 0);
-
-	struct Block block = CreateBlock(&chunkShader, BLOCK_STONE, (vec3s) { 0, 0, 0 });
-	float t = 1;
-	vec3s quadPos = { 0, 1, 0 };
+	float t = 0; bool tIncreasing = true;
+	vec3s quadPos = { 0, -1, 0 };
 	glBindTexture(GL_TEXTURE_2D, g_SPRITE_SHEET.sheet.texObj);
 	while (GetGameShouldRun())
 	{
@@ -62,9 +56,9 @@ int main(void)
 
 
 		SunSet(sunMod);
-		DrawBlock(&block);
+		DrawChunk(&chunk);
 
-		printf("\033[H\033[J");
+		quadPos = glms_vec3_lerp((vec3s) { 0, -1, 0 }, (vec3s) { CHUNK_WIDTH, -1, 0 }, t);
 		mat4s quaddraw = glms_translate(GLMS_MAT4_IDENTITY, quadPos);
 		UseShader(&quadShader);
 		SendUniformMat4(&quadShader, "model", &quaddraw);
@@ -72,7 +66,18 @@ int main(void)
 		SendUniformMat4(&quadShader, "projection", &g_Projection);
 		DrawBufferA(&quadBuf);
 
-		CastRay3D(block.position);
+		if (tIncreasing)
+		{
+			t += 0.01f;
+			if (t >= 1.f) tIncreasing = false;
+		}
+		else
+		{
+			t -= 0.01f;
+			if (t <= 0.f) tIncreasing = true;
+		}
+
+		printf("\033[H\033[J");
 		
 
 #if 0

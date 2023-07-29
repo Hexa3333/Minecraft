@@ -66,6 +66,43 @@ enum BLOCK_TEX_NAMES MapBlocksToTextures(enum BLOCK_TYPE blockType)
 	}
 }
 
+void CalculateUVsOfBlock(float* out, enum BLOCK_TEX_NAMES texName)
+{
+	float blockTextureUVs[6];
+	GetBlockTexture(blockTextureUVs, texName);
+
+	float ret[12];
+
+	// topX0
+	ret[0] = blockTextureUVs[0] / g_SPRITE_SHEET.sheet.width;
+	// topX1
+	ret[1] = (blockTextureUVs[0] + g_SPRITE_SHEET.tileWidth) / g_SPRITE_SHEET.sheet.width;
+	// topY0
+	ret[2] = blockTextureUVs[1] / g_SPRITE_SHEET.sheet.width;
+	// topY1
+	ret[3] = (blockTextureUVs[1] + g_SPRITE_SHEET.tileWidth) / g_SPRITE_SHEET.sheet.width;
+
+	// aroundX0
+	ret[4] = blockTextureUVs[2] / g_SPRITE_SHEET.sheet.height;
+	// aroundX1
+	ret[5] = (blockTextureUVs[2] + g_SPRITE_SHEET.tileHeight) / g_SPRITE_SHEET.sheet.height;
+	// aroundY0
+	ret[6] = blockTextureUVs[3] / g_SPRITE_SHEET.sheet.height;
+	// aroundY1
+	ret[7] = (blockTextureUVs[3] + g_SPRITE_SHEET.tileHeight) / g_SPRITE_SHEET.sheet.height;
+
+	// bottomX0
+	ret[8] = blockTextureUVs[4] / g_SPRITE_SHEET.sheet.width;
+	// bottomX1
+	ret[9] = (blockTextureUVs[4] + g_SPRITE_SHEET.tileWidth) / g_SPRITE_SHEET.sheet.width;
+	// bottomY0
+	ret[10] = blockTextureUVs[5] / g_SPRITE_SHEET.sheet.height;
+	// bottomY1
+	ret[11] = (blockTextureUVs[5] + g_SPRITE_SHEET.tileHeight) / g_SPRITE_SHEET.sheet.height;
+
+	memcpy(out, ret, 12 * sizeof(float));
+}
+
 u8* ChunkFlattenIndex(u16 index)
 {
 	u8 z = index / (CHUNK_WIDTH * CHUNK_HEIGHT);
