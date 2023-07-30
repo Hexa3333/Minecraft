@@ -48,6 +48,8 @@ void DrawChunk_Instanced(struct Chunk_Instanced* chunk);
 char* GetChunkFileName(vec3s position);
 char* GetChunkFilePath(vec3s position);
 
+bool GetChunkFileExists(vec3s position);
+
 void WriteChunk(struct Chunk* chunk);
 struct Chunk LoadChunk(vec3s position);
 

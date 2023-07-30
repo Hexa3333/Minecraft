@@ -4,6 +4,8 @@
 #include "graphics/Camera.h"
 #include "util.h"
 
+static const char* ChunksFolder = "GameData/";
+
 struct Chunk CreateChunk(vec3s position)
 {
 	// if (LookUpChunk)
@@ -140,8 +142,6 @@ void DrawChunk_Instanced(struct Chunk_Instanced* chunk)
 	DrawBufferA_Instanced(&chunk->buffer);
 }
 
-static char* ChunksFolder = "GameData/";
-
 char* GetChunkFileName(vec3s position)
 {
 	u32 x = position.x / CHUNK_WIDTH;
@@ -173,16 +173,25 @@ char* GetChunkFileName(vec3s position)
 
 char* GetChunkFilePath(vec3s position)
 {
-	static char* folder = "GameData/";
 	char* fileName = GetChunkFileName(position);
 
-	char* path = malloc(strlen(fileName) + strlen(folder) + 1);
-	strcpy(path, folder);
-	strcpy(path + strlen(folder), fileName);
+	char* path = malloc(strlen(fileName) + strlen(ChunksFolder) + 1);
+	strcpy(path, ChunksFolder);
+	strcpy(path + strlen(ChunksFolder), fileName);
 
 	free(fileName);
 
 	return path;
+}
+
+bool GetChunkFileExists(vec3s position)
+{
+	char* filePath = GetChunkFilePath(position);
+	FILE* checkFp = fopen(filePath, "rb");
+	free(filePath);
+
+	if (!checkFp) return 0;
+	else return 1;
 }
 
 void WriteChunk(struct Chunk* chunk)

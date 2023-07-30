@@ -51,6 +51,11 @@ int main(void)
 	struct Shader quadShader = CreateShaderVF("res/Shaders/QuadV.glsl", "res/Shaders/QuadF.glsl");
 	struct Buffer quadBuf = CreateBufferVNA(quadVerts, sizeof(quadVerts));
 
+	if (GetChunkFileExists((vec3s) { 16, 0, 0 }))
+	{
+		printf("YAY!");
+	}
+
 	struct Chunk nChunk = LoadChunk((vec3s){0,0,0});
 
 	//struct Chunk chunk =  CreateChunk(&chunkShader, (vec3s) { 0, 0, 0 });
