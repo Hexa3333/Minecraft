@@ -45,8 +45,8 @@ struct Chunk_Instanced CreateChunk_Instanced(struct Shader* shader, enum BLOCK_T
 void DrawChunk_Instanced(struct Chunk_Instanced* chunk);
 
 // IO
-char* GetChunkFileName(struct Chunk* chunk);
-char* GetChunkFilePath(struct Chunk* chunk);
+char* GetChunkFileName(vec3s position);
+char* GetChunkFilePath(vec3s position);
 
 void WriteChunk(struct Chunk* chunk);
 struct Chunk LoadChunk(vec3s position);
