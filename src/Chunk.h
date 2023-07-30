@@ -14,11 +14,10 @@
 struct Chunk
 {
 	struct Block* blocks;
-	struct Shader* shader;
 	vec3s position;
 };
 
-struct Chunk CreateChunk(struct Shader* shader, vec3s position);
+struct Chunk CreateChunk(vec3s position);
 void UpdateChunk(struct Chunk* chunk);
 void DrawChunk(struct Chunk* chunk);
 
@@ -50,6 +49,6 @@ char* GetChunkFileName(struct Chunk* chunk);
 char* GetChunkFilePath(struct Chunk* chunk);
 
 void WriteChunk(struct Chunk* chunk);
-void ModifyChunk(struct Chunk* chunk, u8 x, u8 y, u8 z);
+struct Chunk LoadChunk(vec3s position);
 
 #endif // CHUNK_H

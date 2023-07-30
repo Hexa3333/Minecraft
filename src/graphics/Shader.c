@@ -8,7 +8,7 @@
 struct Shader g_TerrainShader;
 void ShaderSetup()
 {
-	g_TerrainShader = CreateShaderVF("res/Shaders/BasicCubeV.glsl", "res/Shaders/BasicCubeF.glsl");
+	g_TerrainShader = CreateShaderVF("res/Shaders/ChunkV.glsl", "res/Shaders/ChunkF.glsl");
 }
 
 struct Shader CreateShaderVF(const char* vshPath, const char* fshPath)

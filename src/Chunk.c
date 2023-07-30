@@ -4,11 +4,13 @@
 #include "graphics/Camera.h"
 #include "util.h"
 
-struct Chunk CreateChunk(struct Shader* shader, vec3s position)
+struct Chunk CreateChunk(vec3s position)
 {
+	// if (LookUpChunk)
+	// LoadChunk
+	// else:
 
 	struct Chunk ret = { 0 };
-	ret.shader = shader;
 	ret.position = position;
 	ret.blocks = malloc(CHUNK_WIDTH * CHUNK_DEPTH * CHUNK_HEIGHT * sizeof(struct Block));
 
@@ -16,7 +18,7 @@ struct Chunk CreateChunk(struct Shader* shader, vec3s position)
 		for (int z = 0; z < CHUNK_DEPTH; ++z)
 			for (int x = 0; x < CHUNK_WIDTH; ++x)
 	{
-		ret.blocks[CHUNK_BLOCK_INDEXER(x, y, z)] = CreateBlock(shader, BLOCK_STONE, (vec3s) { position.x + x, position.y + y, position.z + z });
+		ret.blocks[CHUNK_BLOCK_INDEXER(x, y, z)] = CreateBlock(&g_TerrainShader, BLOCK_STONE, (vec3s) { position.x + x, position.y + y, position.z + z });
 	}
 
 	SetNeighboringBlocksOfChunk(&ret);
@@ -32,7 +34,7 @@ void UpdateChunk(struct Chunk* chunk)
 			for (int x = 0; x < CHUNK_WIDTH; ++x)
 	{
 		if (chunk->blocks[CHUNK_BLOCK_INDEXER(x, y, z)].type != BLOCK_STONE)
-			chunk->blocks[CHUNK_BLOCK_INDEXER(x, y, z)] = CreateBlock(chunk->shader, chunk->blocks[CHUNK_BLOCK_INDEXER(x, y, z)].type, chunk->blocks[CHUNK_BLOCK_INDEXER(x, y, z)].position);
+			chunk->blocks[CHUNK_BLOCK_INDEXER(x, y, z)] = CreateBlock(&g_TerrainShader, chunk->blocks[CHUNK_BLOCK_INDEXER(x, y, z)].type, chunk->blocks[CHUNK_BLOCK_INDEXER(x, y, z)].position);
 	}
 }
 
@@ -138,11 +140,12 @@ void DrawChunk_Instanced(struct Chunk_Instanced* chunk)
 	DrawBufferA_Instanced(&chunk->buffer);
 }
 
+static char* ChunksFolder = "GameData/";
 
-char* GetChunkFileName(struct Chunk* chunk)
+char* GetChunkFileName(vec3s position)
 {
-	u32 x = chunk->position.x / CHUNK_WIDTH;
-	u32 z = chunk->position.z / CHUNK_DEPTH;
+	u32 x = position.x / CHUNK_WIDTH;
+	u32 z = position.z / CHUNK_DEPTH;
 
 	u8 xFigures = 1;
 	u8 zFigures = 1;
@@ -168,10 +171,10 @@ char* GetChunkFileName(struct Chunk* chunk)
 	return name;
 }
 
-char* GetChunkFilePath(struct Chunk* chunk)
+char* GetChunkFilePath(vec3s position)
 {
 	static char* folder = "GameData/";
-	char* fileName = GetChunkFileName(chunk);
+	char* fileName = GetChunkFileName(position);
 
 	char* path = malloc(strlen(fileName) + strlen(folder) + 1);
 	strcpy(path, folder);
@@ -184,50 +187,57 @@ char* GetChunkFilePath(struct Chunk* chunk)
 
 void WriteChunk(struct Chunk* chunk)
 {
-	static char* ChunksFolder = "GameData/";
-
 	u32 x = chunk->position.x / CHUNK_WIDTH;
 	u32 z = chunk->position.z / CHUNK_DEPTH;
 
-	char* name = GetChunkFileName(chunk);
-	u8 nameLen = strlen(name);
-
-
-	char* filePath = GetChunkFilePath(chunk);
+	char* filePath = GetChunkFilePath(chunk->position);
 	FILE* fp = fopen(filePath, "wb");
 	if (!fp)
 	{
+		char* name = GetChunkFileName(chunk->position);
+		u8 nameLen = strlen(name);
+
 		ERR("Failed to save chunk: %s", name);
+		free(name);
 		return;
 	}
 
-	enum BLOCK_TYPE blockBuffer[CHUNK_WIDTH * CHUNK_HEIGHT * CHUNK_DEPTH];
-	for (int i = 0; i < CHUNK_WIDTH * CHUNK_HEIGHT * CHUNK_DEPTH; ++i)
+	#define CH_DATA_SIZE CHUNK_WIDTH * CHUNK_HEIGHT * CHUNK_DEPTH
+	unsigned char* blockBuffer = malloc(CH_DATA_SIZE);
+	for (int i = 0; i < CH_DATA_SIZE; ++i)
 	{
-		blockBuffer[i] = chunk->blocks[i].type;
+		blockBuffer[i] = (unsigned char)chunk->blocks[i].type;
 	}
 
-	fwrite(blockBuffer, 1, CHUNK_WIDTH * CHUNK_HEIGHT * CHUNK_DEPTH, fp);
-
+	fwrite(blockBuffer, 1, CH_DATA_SIZE, fp); // 1 byte is enough
 
 	fclose(fp);
+	free(blockBuffer);
 	free(filePath);
 }
 
-void ModifyChunk(struct Chunk* chunk, u8 x, u8 y, u8 z)
+struct Chunk LoadChunk(vec3s position)
 {
-	char* path = GetChunkFilePath(chunk);
+	struct Chunk ret;
+	const char* filePath = GetChunkFilePath(position);
+	FILE* fp = fopen(filePath, "rb");
 
-	FILE* fp = fopen(path, "rb+");
-	if (!fp)
+	#define CH_DATA_SIZE CHUNK_WIDTH * CHUNK_HEIGHT * CHUNK_DEPTH
+	unsigned char* blockBuffer = malloc(CH_DATA_SIZE);
+	fread(blockBuffer, 1, CH_DATA_SIZE, fp);
+
+	ret.blocks = malloc(CHUNK_WIDTH * CHUNK_DEPTH * CHUNK_HEIGHT * sizeof(struct Block));
+	for (int y = 0; y < CHUNK_HEIGHT; ++y)
+		for (int z = 0; z < CHUNK_DEPTH; ++z)
+			for (int x = 0; x < CHUNK_WIDTH; ++x)
 	{
-		ERR("Failed to open a file: %s", path);
-		return;
+		ret.blocks[CHUNK_BLOCK_INDEXER(x, y, z)] = CreateBlock(&g_TerrainShader, blockBuffer[CHUNK_BLOCK_INDEXER(x,y,z)], (vec3s) { position.x + x, position.y + y, position.z + z });
 	}
 
-	fseek(fp, (CHUNK_BLOCK_INDEXER(x, y, z)) * sizeof(enum BLOCK_TYPE), SEEK_SET);
-	fwrite(&chunk->blocks[CHUNK_BLOCK_INDEXER(x, y, z)].type, sizeof(enum BLOCK_TYPE), 1, fp);
+	SetNeighboringBlocksOfChunk(&ret);
+	SetChunkInnerBlocksInvisible(&ret);
 
 	fclose(fp);
-	free(path);
+	free(filePath);
+	return ret;
 }
