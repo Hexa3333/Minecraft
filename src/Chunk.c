@@ -8,9 +8,7 @@ static const char* ChunksFolder = "GameData/";
 
 struct Chunk CreateChunk(vec3s position)
 {
-	// if (LookUpChunk)
-	// LoadChunk
-	// else:
+	if (GetChunkFileExists(position)) return LoadChunk(position);
 
 	struct Chunk ret = { 0 };
 	ret.position = position;
@@ -248,5 +246,6 @@ struct Chunk LoadChunk(vec3s position)
 
 	fclose(fp);
 	free(filePath);
+	free(blockBuffer);
 	return ret;
 }
