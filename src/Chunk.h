@@ -2,10 +2,10 @@
 #define CHUNK_H
 
 #define CHUNK_WIDTH 16
-#define CHUNK_HEIGHT 16
+#define CHUNK_HEIGHT 8
 #define CHUNK_DEPTH 16
 
-#define CHUNK_BLOCK_INDEXER(x,y,z) x + CHUNK_WIDTH * (y + CHUNK_DEPTH * z)
+#define CHUNK_BLOCK_INDEXER(_x,_y,_z) _x + (_y * CHUNK_WIDTH) + (_z * CHUNK_WIDTH * CHUNK_HEIGHT)
 
 #include "graphics/Buffer.h"
 #include "graphics/Shader.h"

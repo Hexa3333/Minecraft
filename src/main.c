@@ -12,8 +12,8 @@
 #include "graphics/Camera.h"
 #include "graphics/Shader.h"
 #include "graphics/Light.h"
-#include "AdditionalRendering.h"
 #include "Ray.h"
+
 
 float quadVerts[] = {
 	-0.1f, -0.1f, 0.0f,		0, 0, 1,  // sol alt
@@ -51,17 +51,12 @@ int main(void)
 	struct Shader quadShader = CreateShaderVF("res/Shaders/QuadV.glsl", "res/Shaders/QuadF.glsl");
 	struct Buffer quadBuf = CreateBufferVNA(quadVerts, sizeof(quadVerts));
 
-	if (GetChunkFileExists((vec3s) { 16, 0, 0 }))
-	{
-		printf("YAY!");
-	}
+	struct Chunk chunker = CreateChunk((vec3s) { 0, 0, 0 });
 
-	struct Chunk nChunk = LoadChunk((vec3s){0,0,0});
-
-	//struct Chunk chunk =  CreateChunk(&chunkShader, (vec3s) { 0, 0, 0 });
-	//struct Chunk chunk2 = CreateChunk(&chunkShader, (vec3s) { CHUNK_WIDTH, 0, 0 });
-	//struct Chunk chunk3 = CreateChunk(&chunkShader, (vec3s) { 0, 0, CHUNK_DEPTH });
-	//struct Chunk chunk4 = CreateChunk(&chunkShader, (vec3s) { CHUNK_WIDTH, 0, CHUNK_DEPTH });
+	struct Chunk nChunk = CreateChunk((vec3s){0,0,0});
+	struct Chunk nChunk2 = CreateChunk((vec3s){CHUNK_WIDTH,0,0});
+	struct Chunk nChunk3 = CreateChunk((vec3s){0,0,CHUNK_DEPTH});
+	struct Chunk nChunk4 = CreateChunk((vec3s){CHUNK_WIDTH,0, CHUNK_DEPTH});
 
 	float newX1 = 0, newX2 = 0;
 	float newZ1 = 0, newZ2 = 0;
@@ -82,26 +77,13 @@ int main(void)
 		float pZ = g_MainCamera.position.z;
 
 		SunSet(sunMod);
+
+		DrawChunk(&chunker);
+
 		DrawChunk(&nChunk);
-
-		NearestChunkPosition(g_MainCamera.position, &newX1, &newX2, &newZ1, &newZ2);
-#pragma region chunkgay
-		//chunk.position = (vec3s){ newX1, 0, 0 };
-		//chunk2.position = (vec3s){ newX2,0, 0 };
-		//chunk3.position = (vec3s){ 0,0, newZ1 };
-		//chunk4.position = (vec3s){ 0,0, newZ2 };
-
-		//chunk  =  CreateChunk(&chunkShader, (vec3s){newX1,0,0});
-		//chunk2 = CreateChunk(&chunkShader, (vec3s){newX2,0,0});
-		//chunk3 = CreateChunk(&chunkShader, (vec3s){0,0,newZ1});
-		//chunk4 = CreateChunk(&chunkShader, (vec3s){0,0,newZ2});
-
-		//DrawBlock(&chunk);
-		//DrawBlock(&chunk2);
-		//DrawChunk(&chunk3);
-		//DrawChunk(&chunk4);
-#pragma endregion
-
+		DrawChunk(&nChunk2);
+		DrawChunk(&nChunk3);
+		DrawChunk(&nChunk4);
 
 #pragma region quad
 		quadPos = glms_vec3_lerp((vec3s) { 0, -1, 0 }, (vec3s) { CHUNK_WIDTH, -1, 0 }, t);

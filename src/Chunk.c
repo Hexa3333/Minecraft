@@ -4,6 +4,9 @@
 #include "graphics/Camera.h"
 #include "util.h"
 
+#define FNL_IMPL
+#include "FastNoiseLite.h"
+
 static const char* ChunksFolder = "GameData/";
 
 struct Chunk CreateChunk(vec3s position)
@@ -14,15 +17,27 @@ struct Chunk CreateChunk(vec3s position)
 	ret.position = position;
 	ret.blocks = malloc(CHUNK_WIDTH * CHUNK_DEPTH * CHUNK_HEIGHT * sizeof(struct Block));
 
+	fnl_state noise = fnlCreateState();
+	noise.noise_type = FNL_NOISE_PERLIN;
+
 	for (int y = 0; y < CHUNK_HEIGHT; ++y)
 		for (int z = 0; z < CHUNK_DEPTH; ++z)
 			for (int x = 0; x < CHUNK_WIDTH; ++x)
 	{
-		ret.blocks[CHUNK_BLOCK_INDEXER(x, y, z)] = CreateBlock(&g_TerrainShader, BLOCK_STONE, (vec3s) { position.x + x, position.y + y, position.z + z });
+
+		float frequency = 0.2f;
+		float amplitude = 13;
+
+		noise.octaves = 4;
+		float noiseData = fnlGetNoise2D(&noise, position.x + x, position.z + z);
+
+		u8 surfaceY = 4 + noiseData * 20;
+		if (y < surfaceY)
+			ret.blocks[CHUNK_BLOCK_INDEXER(x, y, z)] = CreateBlock(&g_TerrainShader, BLOCK_STONE, (vec3s) { position.x + x, position.y + y, position.z + z });
 	}
 
 	SetNeighboringBlocksOfChunk(&ret);
-	SetChunkInnerBlocksInvisible(&ret);
+	//SetChunkInnerBlocksInvisible(&ret);
 
 	return ret;
 }
@@ -142,8 +157,8 @@ void DrawChunk_Instanced(struct Chunk_Instanced* chunk)
 
 char* GetChunkFileName(vec3s position)
 {
-	u32 x = position.x / CHUNK_WIDTH;
-	u32 z = position.z / CHUNK_DEPTH;
+	u32 x = fabs(position.x) / CHUNK_WIDTH;
+	u32 z = fabs(position.z) / CHUNK_DEPTH;
 
 	u8 xFigures = 1;
 	u8 zFigures = 1;
@@ -159,10 +174,13 @@ char* GetChunkFileName(vec3s position)
 	// 7: c h u n k _ _
 	char* name = malloc(7 + xFigures + zFigures + 1);
 
-	char x_Str[7];
-	char z_Str[7];
-	sprintf(x_Str, "%u", x);
-	sprintf(z_Str, "%u", z);
+	char x_Str[8];
+	char z_Str[8];
+	if (position.x < 0) sprintf(x_Str, "-%u", x);
+	else sprintf(x_Str, "%u", x);
+	
+	if (position.z < 0) sprintf(z_Str, "-%u", z);
+	else sprintf(z_Str, "%u", z);
 
 	sprintf(name, "chunk_%s_%s", x_Str, z_Str);
 
