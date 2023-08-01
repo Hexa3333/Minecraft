@@ -31,26 +31,41 @@ struct Chunk CreateChunk(vec3s position)
 		noise.octaves = 4;
 		float noiseData = fnlGetNoise2D(&noise, position.x + x, position.z + z);
 
-		u8 surfaceY = 4 + noiseData * 20;
+		u8 surfaceY = 8 + noiseData * 20;
 		if (y < surfaceY)
-			ret.blocks[CHUNK_BLOCK_INDEXER(x, y, z)] = CreateBlock(&g_TerrainShader, BLOCK_STONE, (vec3s) { position.x + x, position.y + y, position.z + z });
+			ret.blocks[CHUNK_BLOCK_INDEXER(x, y, z)] = CreateBlock(&g_TerrainShader, BLOCK_STONE, (vec3s) { position.x + x, y, position.z + z });
+		else
+		{
+			ret.blocks[CHUNK_BLOCK_INDEXER(x, y, z)] = CreateBlock(&g_TerrainShader, BLOCK_AIR, (vec3s) { position.x + x, y, position.z + z });
+		}
+
 	}
 
 	SetNeighboringBlocksOfChunk(&ret);
-	//SetChunkInnerBlocksInvisible(&ret);
+	BakeChunkInsides(&ret);
 
 	return ret;
 }
 
-void UpdateChunk(struct Chunk* chunk)
+void BakeChunkInsides(struct Chunk* chunk)
 {
 	for (int y = 0; y < CHUNK_HEIGHT; ++y)
 		for (int z = 0; z < CHUNK_DEPTH; ++z)
 			for (int x = 0; x < CHUNK_WIDTH; ++x)
-	{
-		if (chunk->blocks[CHUNK_BLOCK_INDEXER(x, y, z)].type != BLOCK_STONE)
-			chunk->blocks[CHUNK_BLOCK_INDEXER(x, y, z)] = CreateBlock(&g_TerrainShader, chunk->blocks[CHUNK_BLOCK_INDEXER(x, y, z)].type, chunk->blocks[CHUNK_BLOCK_INDEXER(x, y, z)].position);
-	}
+			{
+				struct Block* cur = &chunk->blocks[CHUNK_BLOCK_INDEXER(x, y, z)];
+				if (x != 0 && x != CHUNK_WIDTH - 1 && y != 0 && y != CHUNK_HEIGHT - 1 && z != 0 && z != CHUNK_DEPTH - 1)
+				{
+					if (
+						cur->neighbors.left->type &&
+						cur->neighbors.right->type &&
+						cur->neighbors.above->type &&
+						cur->neighbors.below->type &&
+						cur->neighbors.front->type &&
+						cur->neighbors.behind->type
+						) cur->isVisible = false;
+				}
+			}
 }
 
 void DrawChunk(struct Chunk* chunk)

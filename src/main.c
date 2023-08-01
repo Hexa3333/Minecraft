@@ -53,11 +53,6 @@ int main(void)
 
 	struct Chunk chunker = CreateChunk((vec3s) { 0, 0, 0 });
 
-	struct Chunk nChunk = CreateChunk((vec3s){0,0,0});
-	struct Chunk nChunk2 = CreateChunk((vec3s){CHUNK_WIDTH,0,0});
-	struct Chunk nChunk3 = CreateChunk((vec3s){0,0,CHUNK_DEPTH});
-	struct Chunk nChunk4 = CreateChunk((vec3s){CHUNK_WIDTH,0, CHUNK_DEPTH});
-
 	float newX1 = 0, newX2 = 0;
 	float newZ1 = 0, newZ2 = 0;
 	float t = 0; bool tIncreasing = true;
@@ -79,11 +74,6 @@ int main(void)
 		SunSet(sunMod);
 
 		DrawChunk(&chunker);
-
-		DrawChunk(&nChunk);
-		DrawChunk(&nChunk2);
-		DrawChunk(&nChunk3);
-		DrawChunk(&nChunk4);
 
 #pragma region quad
 		quadPos = glms_vec3_lerp((vec3s) { 0, -1, 0 }, (vec3s) { CHUNK_WIDTH, -1, 0 }, t);
@@ -112,7 +102,7 @@ int main(void)
 		glfwSwapBuffers(g_MainWindow.object);
 		glfwPollEvents();
 	}
-
+	free(chunker.blocks);
 	KillGame();
 }
 

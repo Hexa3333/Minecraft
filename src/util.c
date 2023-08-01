@@ -85,21 +85,6 @@ void CalculateUVsOfBlock(float* out, enum BLOCK_TEX_NAMES texName)
 	memcpy(out, ret, 12 * sizeof(float));
 }
 
-u8* ChunkFlattenIndex(u16 index)
-{
-	u8 z = index / (CHUNK_WIDTH * CHUNK_HEIGHT);
-	index -= (z * CHUNK_WIDTH * CHUNK_HEIGHT);
-	u8 y = index / CHUNK_WIDTH;
-	u8 x = index % CHUNK_WIDTH;
-
-	u8* ret = malloc(3 * sizeof(u8));
-	ret[0] = x;
-	ret[1] = y;
-	ret[2] = z;
-
-	return ret;
-}
-
 void SetNeighboringBlocks(struct Chunk* chunk, u8 x, u8 y, u8 z)
 {
 	struct Block* curBlock = &chunk->blocks[CHUNK_BLOCK_INDEXER(x, y, z)];
