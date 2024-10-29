@@ -278,7 +278,7 @@ struct Chunk LoadChunk(vec3s position)
 	SetChunkInnerBlocksInvisible(&ret);
 
 	fclose(fp);
-	free(filePath);
+	free((void*)filePath);
 	free(blockBuffer);
 	return ret;
 }

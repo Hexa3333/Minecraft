@@ -4,6 +4,8 @@
 #include "common.h"
 #include <cglm/struct.h>
 #include <assert.h>
+#include "Block.h"
+#include "Chunk.h"
 
 void CreateLine(float* out, vec3s start, vec3s end, vec3s color);
 vec3s* GetChunkOffsets();
