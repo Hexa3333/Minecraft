@@ -26,10 +26,10 @@ float quadVerts[] = {
 	-0.1f, -0.1f, 0.0f,		0, 0, 1 // sol alt
 };
 
-#include <pthread.h>
-struct Chunk chunks[4*4];
-pthread_t chunkThread;
-pthread_mutex_t chunkMutex = PTHREAD_MUTEX_INITIALIZER;
+//#include <pthread.h>
+// Note to self: OpenGL is NOT thread-safe.
+#define N 2
+struct Chunk chunks[N*N +1];
 
 void* UpdateChunks(void* arg)
 {
@@ -37,11 +37,11 @@ void* UpdateChunks(void* arg)
 	int xStep = (int)g_MainCamera.position.x / CHUNK_WIDTH;
 	int zStep = (int)g_MainCamera.position.z / CHUNK_DEPTH;
 
-	for (int z = 0; z < 4; ++z)
-		for (int x = 0; x < 4; ++x)
+	for (int z = 0; z < N; ++z)
+		for (int x = 0; x < N; ++x)
 		{
-			free(chunks[z*4+x].blocks);
-			chunks[z*4 + x] = CreateChunk((vec3s) {CHUNK_WIDTH*(xStep+x-2), 0, CHUNK_DEPTH*(zStep+z-2)});
+			if (chunks[z*N+x].blocks) free(chunks[z*N +x].blocks);
+			chunks[z*N + x] = CreateChunk((vec3s) {CHUNK_WIDTH*(xStep+x-(N/2)), 0, CHUNK_DEPTH*(zStep+z-(N/2))});
 		}
 
 	return NULL;
@@ -57,10 +57,10 @@ int main(void)
 	struct Shader quadShader = CreateShaderVF("res/Shaders/QuadV.glsl", "res/Shaders/QuadF.glsl");
 	struct Buffer quadBuf = CreateBufferVNA(quadVerts, sizeof(quadVerts));
 
-	for (int z = 0; z < 4; ++z)
-		for (int x = 0; x < 4; ++x)
+	for (int z = 0; z < N; ++z)
+		for (int x = 0; x < N; ++x)
 		{
-			chunks[z*4 + x] = CreateChunk((vec3s) {CHUNK_WIDTH*(x-2), 0, CHUNK_DEPTH*(z-2)});
+			chunks[z*N + x] = CreateChunk((vec3s) {CHUNK_WIDTH*(x-(N/2)), 0, CHUNK_DEPTH*(z-(N/2))});
 		}
 
 	float t = 0; bool tIncreasing = true;
@@ -79,7 +79,7 @@ int main(void)
 		float pY = g_MainCamera.position.y;
 		float pZ = g_MainCamera.position.z;
 
-		for (int i = 0; i < 16; ++i)
+		for (int i = 0; i < N*N; ++i)
 		{
 			DrawChunk(&chunks[i]);
 		}
@@ -111,7 +111,7 @@ int main(void)
 		glfwSwapBuffers(g_MainWindow.object);
 		glfwPollEvents();
 	}
-	for (int i = 0; i < 16; ++i)
+	for (int i = 0; i < N*N; ++i)
 		free(chunks[i].blocks);
 
 	KillGame();
@@ -121,13 +121,6 @@ void KeyInput()
 {
 		vec3s direction = glms_vec3_cross(g_MainCamera.front, g_MainCamera.up);
 		vec3s moveSpeed = {20.0f * DT, 20.0f * DT, 20.0f * DT};
-
-		if (glfwGetKey(g_MainWindow.object, GLFW_KEY_R) == GLFW_PRESS)
-		{
-			//pthread_create(&chunkThread, 0, UpdateChunks, NULL);
-			UpdateChunks(NULL);
-		}
-			//UpdateChunks(NULL);
 
 		if (glfwGetKey(g_MainWindow.object, GLFW_KEY_W))
 			g_MainCamera.position = glms_vec3_add(g_MainCamera.position, glms_vec3_mul(g_MainCamera.front, moveSpeed));
@@ -165,6 +158,9 @@ void KeyInput()
 			g_Sun.directionalLight.direction.z -= 0.1f;
 			LOG("Sun -Z");
 		}
+
+		if (glfwGetKey(g_MainWindow.object, GLFW_KEY_R) == GLFW_PRESS)
+			UpdateChunks(NULL);
 
 
 		if (glfwGetKey(g_MainWindow.object, GLFW_KEY_C))
