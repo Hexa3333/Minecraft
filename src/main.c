@@ -13,6 +13,7 @@
 #include "graphics/Shader.h"
 #include "graphics/Light.h"
 #include "Ray.h"
+#include "AdditionalRendering.h"
 
 
 float quadVerts[] = {
@@ -25,24 +26,29 @@ float quadVerts[] = {
 	-0.1f, -0.1f, 0.0f,		0, 0, 1 // sol alt
 };
 
-void NearestChunkPosition(vec3s player, float* newX1, float* newX2,
-						  float* newZ1, float* newZ2)
+#include <pthread.h>
+struct Chunk chunks[4*4];
+pthread_t chunkThread;
+pthread_mutex_t chunkMutex = PTHREAD_MUTEX_INITIALIZER;
+
+void* UpdateChunks(void* arg)
 {
-	float xDiffL = ((i64)player.x - ((i64)player.x % CHUNK_WIDTH));
-	float xDiffR = xDiffL + CHUNK_WIDTH;
+	//pthread_detach(pthread_self());
+	int xStep = (int)g_MainCamera.position.x / CHUNK_WIDTH;
+	int zStep = (int)g_MainCamera.position.z / CHUNK_DEPTH;
 
-	float zDiffF = ((i64)player.z - ((i64)player.z % CHUNK_DEPTH));
-	float zDiffB = zDiffF - CHUNK_DEPTH;
+	for (int z = 0; z < 4; ++z)
+		for (int x = 0; x < 4; ++x)
+		{
+			free(chunks[z*4+x].blocks);
+			chunks[z*4 + x] = CreateChunk((vec3s) {CHUNK_WIDTH*(xStep+x-2), 0, CHUNK_DEPTH*(zStep+z-2)});
+		}
 
-	*newX1 = xDiffL;
-	*newX2 = xDiffR;
-
-	*newZ1 = zDiffF;
-	*newZ2 = zDiffB;
+	return NULL;
 }
 
+
 static float dis = 1000.f;
-float sunMod = 1.0f;
 static void KeyInput();
 int main(void)
 {
@@ -51,10 +57,12 @@ int main(void)
 	struct Shader quadShader = CreateShaderVF("res/Shaders/QuadV.glsl", "res/Shaders/QuadF.glsl");
 	struct Buffer quadBuf = CreateBufferVNA(quadVerts, sizeof(quadVerts));
 
-	struct Chunk chunker = CreateChunk((vec3s) { 0, 0, 0 });
+	for (int z = 0; z < 4; ++z)
+		for (int x = 0; x < 4; ++x)
+		{
+			chunks[z*4 + x] = CreateChunk((vec3s) {CHUNK_WIDTH*(x-2), 0, CHUNK_DEPTH*(z-2)});
+		}
 
-	float newX1 = 0, newX2 = 0;
-	float newZ1 = 0, newZ2 = 0;
 	float t = 0; bool tIncreasing = true;
 	vec3s quadPos = { 0, -1, 0 };
 	glBindTexture(GL_TEXTURE_2D, g_SPRITE_SHEET.sheet.texObj);
@@ -71,9 +79,10 @@ int main(void)
 		float pY = g_MainCamera.position.y;
 		float pZ = g_MainCamera.position.z;
 
-		SunSet(sunMod);
-
-		DrawChunk(&chunker);
+		for (int i = 0; i < 16; ++i)
+		{
+			DrawChunk(&chunks[i]);
+		}
 
 #pragma region quad
 		quadPos = glms_vec3_lerp((vec3s) { 0, -1, 0 }, (vec3s) { CHUNK_WIDTH, -1, 0 }, t);
@@ -102,7 +111,9 @@ int main(void)
 		glfwSwapBuffers(g_MainWindow.object);
 		glfwPollEvents();
 	}
-	free(chunker.blocks);
+	for (int i = 0; i < 16; ++i)
+		free(chunks[i].blocks);
+
 	KillGame();
 }
 
@@ -110,6 +121,13 @@ void KeyInput()
 {
 		vec3s direction = glms_vec3_cross(g_MainCamera.front, g_MainCamera.up);
 		vec3s moveSpeed = {20.0f * DT, 20.0f * DT, 20.0f * DT};
+
+		if (glfwGetKey(g_MainWindow.object, GLFW_KEY_R) == GLFW_PRESS)
+		{
+			//pthread_create(&chunkThread, 0, UpdateChunks, NULL);
+			UpdateChunks(NULL);
+		}
+			//UpdateChunks(NULL);
 
 		if (glfwGetKey(g_MainWindow.object, GLFW_KEY_W))
 			g_MainCamera.position = glms_vec3_add(g_MainCamera.position, glms_vec3_mul(g_MainCamera.front, moveSpeed));
@@ -136,6 +154,18 @@ void KeyInput()
 			dis += 100.f;
 			LOG("Render Dist: %.1f", dis);
 		}
+
+		if (glfwGetKey(g_MainWindow.object, GLFW_KEY_UP))
+		{
+			g_Sun.directionalLight.direction.z += 0.1f;
+			LOG("Sun +Z");
+		}
+		if (glfwGetKey(g_MainWindow.object, GLFW_KEY_DOWN))
+		{
+			g_Sun.directionalLight.direction.z -= 0.1f;
+			LOG("Sun -Z");
+		}
+
 
 		if (glfwGetKey(g_MainWindow.object, GLFW_KEY_C))
 			printf("\033[H\033[J");

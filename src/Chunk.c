@@ -25,8 +25,8 @@ struct Chunk CreateChunk(vec3s position)
 			for (int x = 0; x < CHUNK_WIDTH; ++x)
 	{
 
-		float frequency = 0.2f;
-		float amplitude = 13;
+		static float frequency = 0.2f;
+		static float amplitude = 13;
 
 		noise.octaves = 4;
 		float noiseData = fnlGetNoise2D(&noise, position.x + x, position.z + z);
